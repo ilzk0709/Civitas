@@ -5,5 +5,5 @@
 # and open the template in the editor.
 
 module Civitas
-
+  
 end

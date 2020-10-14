@@ -3,38 +3,39 @@
 # and open the template in the editor.
 module Civitas
   class MazoSorpresas
-    diario = Diario.new()
     srand()
-    def initialize
+    def initialize(*d)
        @sorpresas = []
        @barajada = false
-       @debug = false
+       if (d.size != 0)
+         @debug = d
+        if (@debug == true)
+          Diario.instance.ocurre_evento("Se ha creado el mazo de sorpresas")
+        end
+       else
+         @debug = false
+       end
        @usadas = 0
        @cartas_especiales = []
        @ultima_sorpresa
     end
     
-    def initialize(d)
-      initialize()
-      @debug = d
-      if (@debug == true)
-        diario.ocurre_evento("Se ha creado el mazo de sorpresas")
-      end
-    end
-    
     def al_mazo(s)
       if (@barajada == false)
-        sorpresa = Sorpresa.new()
-        @sorpresas << sorpresa
+        @sorpresas << s
       end
     end
     
     def siguiente
       sorpresa = Sorpresa.new()
-      ind = 0
       if (@barajada == false || @usadas == @sorpresas.size)
         if (@debug == false)
-          #for
+          for i in (0..@sorpresas.size)
+            ind = (rand() * sorpresas.size).to_i
+            sorpresatemp = @sorpresas[i]
+            @sorpresas[i] = sorpresas[ind]
+            @sorpresas[ind] = sorpresatemp
+          end
           @usadas = 0
           @barajada = true
         end
@@ -50,7 +51,7 @@ module Civitas
       while (@sorpresas.rindex(sorpresa) != nil)
         @sorpresas.delete(sorpresa)
         @cartas_especiales << sorpresa
-        diario.ocurre_evento("Se ha quitado la carta " + sorpresa + 
+        Diario.instance.ocurre_evento("Se ha quitado la carta " + sorpresa.to_s + 
             " del mazo de sorpresas")
       end
     end
@@ -59,7 +60,7 @@ module Civitas
       while (@cartas_especiales.rindex(sorpresa) != nil)
         @cartas_especiales.delete(sorpresa)
         @sorpresas << sorpresa
-        diario.ocurre_evento("Se ha aniadido la carta " + sorpresa + 
+        Diario.instance.ocurre_evento("Se ha aniadido la carta " + sorpresa.to_s + 
             " al mazo de sorpresas")
       end
     end

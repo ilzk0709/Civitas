@@ -13,18 +13,18 @@ module Civitas
         @num_casilla_carcel = 1
       end
       @casillas = Array.new()
-      casilla = Casilla.new("Salida")
-      @casillas << casilla
+#      casilla = Casilla.new("Salida")
+#      @casillas << casilla
       @por_salida = 0
       @tiene_juez = false
     end
 
-    def correcto
-      return (@casillas.size > @num_casilla_carcel)
-    end
-    
-    def correcto(num_casilla)
-      return (@casillas.size > @num_casilla_carcel && num_casilla > 0 && num_casilla < @casillas.size)
+    def correcto(*num_casilla)
+      if (num_casilla.size == 0)
+        return (@casillas.size > @num_casilla_carcel)
+      else
+        return (@casillas.size > @num_casilla_carcel && num_casilla[0] > 0 && num_casilla[0] < @casillas.size)
+      end
     end
     
     def get_por_salida

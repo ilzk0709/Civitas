@@ -8,7 +8,7 @@ module Civitas
   class Dado
     include Singleton
     srand()
-    attr_reader = :ultimo_resultado
+    attr_accessor = :ultimo_resultado
     def initialize
       @@salida_carcel = 5
       @ultimo_resultado = 0
@@ -17,8 +17,8 @@ module Civitas
     
     def tirar
       tirada = 1
-      if (debug == false)
-        tirada = rand(6).to_i
+      if (@debug == false)
+        tirada = rand(6)+1.to_i
       end
       @ultimo_resultado = tirada
       return tirada
@@ -37,14 +37,17 @@ module Civitas
       numjugador = (rand(n) + 1).to_i
     end
     
+    def ultimo_resultado
+      @ultimo_resultado
+    end
+    
     def set_debug(d)
       @debug = d
-      diario = Diario.new
       if (@debug == true)
-        diario.ocurre_evento("Se ha activado el debug")
+        Diario.instance.ocurre_evento("Se ha activado el debug")
       else 
         if (@debug == false)
-          diario.ocurre_evento("Se ha desactivado el debug")
+          Diario.instance.ocurre_evento("Se ha desactivado el debug")
         end
       end
     end

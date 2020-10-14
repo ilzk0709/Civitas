@@ -5,12 +5,12 @@
 # and open the template in the editor.
 module Civitas
   class Casilla
-    def initialize
-      @nombre = "Johnny, the johnyberry"
-    end
-
-    def initialize(j)
-      @nombre = j
+    def initialize(*j)
+      if (j.size != 0)
+        @nombre = j[0]
+      else
+        @nombre = ""
+      end
     end
   end
 end
