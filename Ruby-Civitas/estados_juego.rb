@@ -1,8 +1,8 @@
 module Civitas
   module Estados_juego
     
-		INICIO_TURNO = :inicio_turno  
-		DESPUES_CARCEL = :despues_carcel
+    INICIO_TURNO = :inicio_turno  
+    DESPUES_CARCEL = :despues_carcel
     DESPUES_AVANZAR = :despues_avanzar
     DESPUES_COMPRAR = :despues_comprar
     DESPUES_GESTIONAR = :despues_gestionar
@@ -10,7 +10,7 @@ module Civitas
   
   module Operaciones_juego
     
-		AVANZAR = :avanzar
+    AVANZAR = :avanzar
     COMPRAR = :comprar
     GESTIONAR = :gestionar
     SALIR_CARCEL = :salir_carcel
@@ -19,17 +19,17 @@ module Civitas
   
   module Tipo_casilla
     
-		CALLE = :calle  
-		SORPRESA = :sorpresa
+    CALLE = :calle  
+    SORPRESA = :sorpresa
     JUEZ = :juez
     IMPUESTO = :impuesto
     DESCANSO = :descanso
   end
   
   module Tipo_sorpresa
-    
-		IRCARCEL = :ircarcel  
-		IRCASILLA = :ircasilla
+   
+    IRCARCEL = :ircarcel  
+    IRCASILLA = :ircasilla
     PAGARCOBRAR = :pagarcobrar
     PORCASAHOTEL = :porcasahotel
     PORJUGADOR = :porjugador
