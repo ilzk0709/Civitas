@@ -314,5 +314,14 @@ public class Jugador implements Comparable<Jugador> {
         
         return b;
     }
+    
+    @Override
+    public String toString() {
+        return "Jugador: " + getNombre() + "\n"
+                + "Encarcelado?: " + isEncarcelado() + "\n"
+                + "Saldo: " + getSaldo() + "\n"
+                + "Casilla Actual: " + getNumCasillaActual();
+                
+    }
 }
 
