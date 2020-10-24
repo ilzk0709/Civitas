@@ -24,6 +24,9 @@ public class TituloPropiedad {
         precioCompra = prec_compra;
         precioEdificar = prec_edif;
         propietario = null;
+        numCasas = 0;
+        numHoteles = 0;
+        hipotecado = false;
     }
     
     void actualizaPropietarioPorConversion(Jugador jug) { 
@@ -116,9 +119,8 @@ public class TituloPropiedad {
     }
     
     void tramitarAlquiler(Jugador jug) {
-        float alquiler;
         if(tienePropietario() && !esEsteElPropietario(jug)) {
-            alquiler = pagaAlquiler(jug);
+            jug.pagaAlquiler(getPrecioAlquiler());
             propietario.recibe(getPrecioAlquiler());
         }
     }
@@ -126,7 +128,7 @@ public class TituloPropiedad {
     boolean tienePropietario() {
         boolean tiene_prop = false;
         
-        if(propietario.nombre != "\0")
+        if(propietario != null)
             tiene_prop = true;
         
         return tiene_prop;
@@ -171,7 +173,7 @@ public class TituloPropiedad {
                 + "Precio Compra: " + getPrecioCompra() + "\n"
                 + "Precio Edificacion: " + getPrecioEdificar() + "\n"
                 + "Precio Venta: " + getPrecioVenta() + "\n"
-                + "Propietario: " +  getPropietario() + "\n"
+                + "Propietario: " +  getPropietario().getNombre() + "\n"
                 + "Hipoteca: " + getImporteHipoteca() + "\n"
                 + "Hipotecada: " + getHipotecado() + "\n"
                 + "Numero Casas: " + getNumCasas() + "\n"
