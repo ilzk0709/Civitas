@@ -1,7 +1,5 @@
 package civitas;
 
-import java.util.ArrayList;
-
 /**
  *  @brief TituloPropiedad
  *
