@@ -15,14 +15,24 @@ public class CivitasJuego {
     private int indiceJugadorActual;
     private ArrayList<Jugador> jugadores;
     private GestorEstados gestor;
+    private EstadosJuego estado;
     private MazoSorpresas mazo;
     private Tablero tablero;
     
-    /** Avanza Jugator
-     * @
+    /** Avanza Jugador
+     * 
      */
     private void avanzaJugador() {
-        //Se hace en la siguiente practica
+        Jugador jugadorActual = jugadores.get(indiceJugadorActual);
+        int posicionActual = jugadorActual.getNumCasillaActual();
+        int tirada = Dado.getInstance().tirar();
+        int posicionNueva = tablero.nuevaPosicion(posicionActual, tirada);
+        Casilla casilla = tablero.getCasilla(posicionNueva);
+        contabilizarPasosPorsalida(jugadorActual);
+        jugadorActual.moverACasilla(posicionNueva);
+        casilla.recibeJugador(indiceJugadorActual, jugadores);
+        contabilizarPasosPorsalida(jugadorActual);
+        jugadores.set(indiceJugadorActual, jugadorActual);
     }
     
     public boolean cancelarHipoteca(int ip) {
@@ -40,10 +50,18 @@ public class CivitasJuego {
         indiceJugadorActual = Dado.getInstance().quienEmpieza(jugadores.size());
         tablero = new Tablero(13);
     }
-    
+    /**Comprueba si el jugador actual puede comprar el titulo de la casilla en la que esta
+     * 
+     * @return res true si el jugador actual puede comprar el titulo
+     */
     public boolean comprar() {
-        //Siguiente practica
-        return false;
+        boolean res = false;
+        Jugador jugadorActual = jugadores.get(indiceJugadorActual);
+        int numCasillaActual = jugadorActual.getNumCasillaActual();
+        Casilla casilla = tablero.getCasilla(numCasillaActual);
+        TituloPropiedad titulo = casilla.getTituloPropiedad();
+        res = jugadorActual.comprar(titulo);
+        return res;
     }
     
     public boolean construirCasa(int ip) {
@@ -138,7 +156,7 @@ public class CivitasJuego {
     private void inicializarTablero(MazoSorpresas _mazo) {
         tablero = new Tablero(10);
         for (int i = 0; i < 20; i++) {
-            tablero.aniadeCasilla(new Casilla());
+            tablero.aniadeCasilla(new Casilla("casilla"));
         }
     }
     /** Pasa al siguiente jugador
@@ -173,9 +191,21 @@ public class CivitasJuego {
     public boolean salirCarcelTirando() {
         return false;
     }
-    
+    /**Realiza la accion necesaria en caso de que la operacion en curso sea pasar turno o avanzar
+     * 
+     * @return operacion el objeto con la operacion realizada
+     */
     public OperacionesJuego siguientePaso() {
-        return OperacionesJuego.AVANZAR;
+        Jugador jugadorActual = jugadores.get(indiceJugadorActual);
+        OperacionesJuego operacion = gestor.operacionesPermitidas(jugadorActual, estado);
+        if (operacion == OperacionesJuego.PASAR_TURNO) {
+            pasarTurno();
+            siguientePasoCompletado(operacion);
+        } else if (operacion == OperacionesJuego.AVANZAR) {
+            avanzaJugador();
+            siguientePasoCompletado(operacion);
+        }
+        return operacion;
     }
     /** Actualiza el estado del juego despues de avanzar
      * 

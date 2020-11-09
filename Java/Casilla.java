@@ -120,13 +120,40 @@ public class Casilla {
     public boolean jugadorCorrecto(int actual, ArrayList<Jugador> todos) {
         return (actual >= 0 && actual < todos.size());
     }
-    //Siguiente practica
+    /**Llama al metodo recibeJugador indicado para la casilla actual
+     * 
+     * @param actual indice del jugador actual en el vector
+     * @param todos  vector con todos los jugadores
+     */
     void recibeJugador(int actual, ArrayList<Jugador> todos){
-        
+        switch (tipo) {
+            case CALLE:
+                recibeJugador_calle(actual, todos);
+                break;
+            case IMPUESTO:
+                recibeJugador_impuesto(actual, todos);
+                break;
+            case JUEZ:
+                recibeJugador_juez(actual, todos);
+                break;
+            case SORPRESA:
+                recibeJugador_sorpresa(actual, todos);
+            case DESCANSO:
+                informe(actual, todos);
+        }
     }
     //Siguiente practica
     private void recibeJugador_calle(int actual, ArrayList<Jugador> todos){
-        
+        if (jugadorCorrecto(actual, todos)) {
+            informe(actual, todos);
+            Jugador jugador = todos.get(actual);
+            if (!tituloPropiedad.tienePropietario()) {
+                jugador.puedeComprarCasilla();
+            } else {
+                tituloPropiedad.tramitarAlquiler(jugador);
+            }
+            todos.set(actual, jugador);
+        }
     }
     
     /**Hace que el jugador pague un impuesto
@@ -151,9 +178,17 @@ public class Casilla {
             todos.get(actual).encarcelar(carcel);
         }
     }
-    
+    /**Realiza las acciones necesarias a un jugador que cae en una casilla de tipo sorpresa
+     * 
+     * @param actual indice del jugador actual en el vector
+     * @param todos vector con todos los jugadores
+     */
     private void recibeJugador_sorpresa(int actual, ArrayList<Jugador> todos){
-        //siguiente practica
+        if (jugadorCorrecto(actual, todos)) {
+            sorpresa = mazo.siguiente();
+            informe(actual, todos);
+            sorpresa.aplicarAJugador(actual, todos);
+        }
     }
     
     @Override
