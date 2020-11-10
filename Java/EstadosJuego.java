@@ -25,11 +25,3 @@ enum EstadosJuego {
   DESPUES_COMPRAR,
   DESPUES_GESTIONAR
 }
-
-enum OperacionesJuego {
-    AVANZAR,
-    COMPRAR,
-    GESTIONAR,
-    SALIR_CARCEL,
-    PASAR_TURNO
-}
