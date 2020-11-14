@@ -34,15 +34,32 @@ public class CivitasJuego {
         contabilizarPasosPorsalida(jugadorActual);
         jugadores.set(indiceJugadorActual, jugadorActual);
     }
-    
+    /**
+     * Aplica el metodo cancelarHipoteca de Jugador al jugador actual en la propiedad de indice ip
+     * @param ip indice de la propiedad de la cual cancelar la hipoteca
+     * @return result, true si se ha aplicado el cambio
+     */
     public boolean cancelarHipoteca(int ip) {
-        //Depende del metodo del mismo nombre en jugador
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).cancelarHipoteca(ip);
+        return result;
     }
     /**Constructor de la clase CivitasJuego
      * EstadosJuego
      */
     public CivitasJuego() {
+        jugadores = new ArrayList<>();
+        gestor = new GestorEstados();
+        gestor.estadoInicial();
+        mazo = new MazoSorpresas();
+        indiceJugadorActual = Dado.getInstance().quienEmpieza(jugadores.size());
+        tablero = new Tablero(13);
+    }
+    
+    public CivitasJuego(ArrayList<String> nombres) {
+        jugadores = new ArrayList<>();
+        for (int i = 0; i < nombres.size(); i++) {
+            jugadores.add(new Jugador(nombres.get(i)));
+        }
         jugadores = new ArrayList<>();
         gestor = new GestorEstados();
         gestor.estadoInicial();
@@ -63,15 +80,23 @@ public class CivitasJuego {
         res = jugadorActual.comprar(titulo);
         return res;
     }
-    
+    /**
+     * Aplica el metodo construirCasa de jugador al jugador actual en la propiedad del indice ip
+     * @param ip indice de la propiedad en la cual se va a construir una casa
+     * @return result, true si se aplica el cambio
+     */
     public boolean construirCasa(int ip) {
-        //Depende del metodo en jugador que se llama igual
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).construirCasa(ip);
+        return result;
     }
-    
+    /**
+     * Aplica el metodo construirHotel de jugador al jugador actual en la propiedad del indice ip
+     * @param ip indice de la propiedad en la cual se va a construir un hotel
+     * @return result, true si se aplica el cambio
+     */
     public boolean construirHotel(int ip) {
-        //Depende del metodo en jugador con el mismo nombre
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).construirHotel(ip);
+        return result;
     }
     /** Cuenta las veces que un jugador ha pasado por la salida y le paga por
      * las veces que ha pasado en el turno actual
@@ -83,17 +108,19 @@ public class CivitasJuego {
             jugadorActual.pasaPorSalida();
         }
     }
-    /** Determina si el juego finaliza porque al menos un jugador esta en bancarrota
+    /** Determina si el juego finaliza porque al menos un jugador esta en bancarrota y reordena el vector para obtener el ranking
      * 
      * @return true si termina el juego, false si sigue
      */
     public boolean finalDelJuego() {
         boolean fin = false;
         for (int i = 0; i < jugadores.size() && !fin; i++) {
-            if (jugadores.get(i).getSaldo()== 0)
+            if (jugadores.get(i).getSaldo()== 0) {
                 fin = true;
+                jugadores = ranking();
+            }
         }
-        return false;
+        return fin;
     }
     
     /** Devuelve el objeto de la casilla donde esta el jugador actual
@@ -113,10 +140,14 @@ public class CivitasJuego {
     public Jugador getJugadorActual() {
         return jugadores.get(indiceJugadorActual);
     }
-    
+    /**Aplica el metodo hipotecar de jugador al jugador acutal en la propiedad del indice ip
+     * 
+     * @param ip indice de la propiedad que se va a hipotecar
+     * @return result, true si se aplica el cambio
+     */
     public boolean hipotecar(int ip) {
-        //Depende del metodo del mismo nombre en jugador
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).hipotecar(ip);
+        return result;
     }
     /**Muestra los datos del jugador actual a traves del toString()
      * 
@@ -169,7 +200,7 @@ public class CivitasJuego {
     }
     /** Ordena los jugadores segun su saldo
      * 
-     * @return El vector ordenado de jugadores segun su sueldo
+     * @return El vector ordenado de jugadores segun su saldo
      */
     private ArrayList<Jugador> ranking() {
         ArrayList<Jugador> ranking = new ArrayList<>();
@@ -183,13 +214,21 @@ public class CivitasJuego {
         }
         return ranking;
     }
-    
+    /** Llama al metodo salirCarcelPagando de jugador
+     * 
+     * @return result true si se aplica el cambio
+     */
     public boolean salirCarcelPagando() {
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).salirCarcelPagando();
+        return result;
     }
-    
+    /** Llama al metodo salirCarcelTirando de jugador
+     * 
+     * @return result true si se aplica el cambio
+     */
     public boolean salirCarcelTirando() {
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).salirCarcelTirando();
+        return result;
     }
     /**Realiza la accion necesaria en caso de que la operacion en curso sea pasar turno o avanzar
      * 
@@ -214,10 +253,14 @@ public class CivitasJuego {
     public void siguientePasoCompletado(OperacionesJuego operacion) {
         gestor.siguienteEstado(jugadores.get(indiceJugadorActual), EstadosJuego.DESPUES_AVANZAR, operacion);
     }
-    
+    /**Aplica el metodo vender al jugador actual en la propiedad del indice ip
+     * 
+     * @param ip indice de la propiedad que se va a vender
+     * @return  result, true si se aplica el cambio
+     */
     public boolean vender (int ip) {
-        
-        return false;
+        boolean result = jugadores.get(indiceJugadorActual).vender(ip);
+        return result;
     }
     
     
