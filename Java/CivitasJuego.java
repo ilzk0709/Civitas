@@ -60,11 +60,11 @@ public class CivitasJuego {
         for (int i = 0; i < nombres.size(); i++) {
             jugadores.add(new Jugador(nombres.get(i)));
         }
-        jugadores = new ArrayList<>();
         gestor = new GestorEstados();
         gestor.estadoInicial();
         mazo = new MazoSorpresas();
         indiceJugadorActual = Dado.getInstance().quienEmpieza(jugadores.size());
+        estado = EstadosJuego.INICIO_TURNO;
         tablero = new Tablero(13);
     }
     /**Comprueba si el jugador actual puede comprar el titulo de la casilla en la que esta
@@ -251,7 +251,7 @@ public class CivitasJuego {
      * @param operacion 
      */
     public void siguientePasoCompletado(OperacionesJuego operacion) {
-        gestor.siguienteEstado(jugadores.get(indiceJugadorActual), EstadosJuego.DESPUES_AVANZAR, operacion);
+        gestor.siguienteEstado(jugadores.get(indiceJugadorActual), estado, operacion);
     }
     /**Aplica el metodo vender al jugador actual en la propiedad del indice ip
      * 
