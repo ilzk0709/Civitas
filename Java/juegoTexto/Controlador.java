@@ -34,7 +34,7 @@ public class Controlador {
             vista.pausa();
             if (juego.siguientePaso() != OperacionesJuego.PASAR_TURNO) {
                 while (Diario.getInstance().eventosPendientes()) {
-                    Diario.getInstance().leerEvento();
+                    System.out.println(Diario.getInstance().leerEvento());
                 }
             }
             if (!juego.finalDelJuego()) {
