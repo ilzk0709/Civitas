@@ -38,7 +38,7 @@ public class Jugador implements Comparable<Jugador> {
      */
     public Jugador(String nomb) {
         nombre = nomb;
-        propiedades = null;
+        propiedades = new ArrayList<>();
         encarcelado = false;
         numCasillaActual = 0;
         puedeComprar = true;
@@ -193,10 +193,10 @@ public class Jugador implements Comparable<Jugador> {
         boolean encarcelar = false;
 
         if (!isEncarcelado()) {
-            if (!tieneSalvoconducto()) {
+            if (tieneSalvoconducto()) {
                 perderSalvoconducto();
                 encarcelar = false;
-                Diario.getInstance().ocurreEvento("Jugador " + getNombre() + "se libra de carcel");
+                Diario.getInstance().ocurreEvento("Jugador " + getNombre() + " se libra de carcel.");
             } else {
                 encarcelar = true;
             }
@@ -257,7 +257,7 @@ public class Jugador implements Comparable<Jugador> {
         if (debeSerEncarcelado()) {
             moverACasilla(numCasillaCarcel);
             encarcelado = true;
-            Diario.getInstance().ocurreEvento("Jugador " + getNombre() + "va a la carcel");
+            Diario.getInstance().ocurreEvento("Jugador " + getNombre() + " va a la carcel");
         }
 
         return encarcelado;
@@ -392,7 +392,7 @@ public class Jugador implements Comparable<Jugador> {
         } else {
             numCasillaActual = numCasilla;
             puedeComprar = false;
-            Diario.getInstance().ocurreEvento("Jugador " + getNombre() + "se mueve a " + getNumCasillaActual());
+            Diario.getInstance().ocurreEvento("Jugador " + getNombre() + " se mueve a " + getNumCasillaActual());
         }
 
         return b;

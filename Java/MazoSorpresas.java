@@ -46,7 +46,7 @@ public class MazoSorpresas {
     }
     
     public Sorpresa siguiente() {
-    Sorpresa sorpresa = new Sorpresa();
+    Sorpresa sorpresa = new Sorpresa(TipoSorpresa.PORJUGADOR);
     Random random = new Random();
     int ind = 0;
     if (!barajada || usadas == sorpresas.size()) 
@@ -68,10 +68,11 @@ public class MazoSorpresas {
     
     public void inhabilitarCartaEspecial(Sorpresa sorpresa) {
         while (sorpresas.contains(sorpresa)) {
-            if (sorpresas.remove(sorpresa));
+                int indice = sorpresas.lastIndexOf(sorpresa);
+                sorpresas.remove(indice);
                 cartasEspeciales.add(sorpresa);
                 Diario.getInstance().ocurreEvento("Se ha aniadido " + sorpresa +
-                        "al mazo de cartas especiales");
+                        "[" + indice + "] al mazo de cartas especiales");
         }
     }
     
