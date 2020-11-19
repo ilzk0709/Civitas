@@ -131,8 +131,6 @@ class VistaTextual {
   
   public void setCivitasJuego(CivitasJuego civitas){ 
         juegoModel=civitas;
-        this.actualizarVista();
-
     }
   
   void actualizarVista(){
