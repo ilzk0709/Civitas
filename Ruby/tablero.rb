@@ -13,8 +13,8 @@ module Civitas
         @num_casilla_carcel = 1
       end
       @casillas = Array.new()
-#      casilla = Casilla.new("Salida")
-#      @casillas << casilla
+      casilla = Casilla.new("Salida")
+      @casillas << casilla
       @por_salida = 0
       @tiene_juez = false
     end
