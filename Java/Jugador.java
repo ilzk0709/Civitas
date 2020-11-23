@@ -269,11 +269,12 @@ public class Jugador implements Comparable<Jugador> {
      * @return true si existe, false si no
      */
     boolean existeLaPropiedad(int ip) {
-        boolean existir = true;
-
-        if (propiedades.get(ip) == null) {
-            existir = false;
-        }
+        boolean existir = false;
+        if (propiedades.size() > 0)
+            if (propiedades.get(ip) != null) {
+                existir = true;
+            }
+                
 
         return existir;
     }
@@ -338,7 +339,7 @@ public class Jugador implements Comparable<Jugador> {
      * @brief Retorna la lista de propiedades del jugador en cuestion
      * @return array de propiedades
      */
-    ArrayList<TituloPropiedad> getPropiedades() {
+    public ArrayList<TituloPropiedad> getPropiedades() {
         return propiedades;
     }
 
@@ -647,10 +648,11 @@ public class Jugador implements Comparable<Jugador> {
             b = false;
         } else {
 
+
             if (existeLaPropiedad(ip)) {
                 if (getPropiedades().get(ip).vender(this)) {
-                    getPropiedades().remove(ip);
                     Diario.getInstance().ocurreEvento("Jugador " + getNombre() + " vende " + getPropiedades().get(ip).getNombre());
+                    getPropiedades().remove(ip);
                     b = true;
                 }
             }

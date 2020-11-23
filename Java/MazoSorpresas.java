@@ -6,6 +6,7 @@
 package civitas;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 /**
  *
@@ -51,10 +52,7 @@ public class MazoSorpresas {
     int ind = 0;
     if (!barajada || usadas == sorpresas.size()) 
         if (!debug) {
-            for (int i = 0; i < sorpresas.size(); i++) {
-                ind = random.nextInt(sorpresas.size());
-                sorpresas.set(i, sorpresas.get(ind));
-            }
+            Collections.shuffle(sorpresas);
             usadas = 0;
             barajada = true;
         }
@@ -62,6 +60,7 @@ public class MazoSorpresas {
     sorpresa = sorpresas.get(0);
     ultimaSorpresa = sorpresas.get(0);
     sorpresas.remove(0);
+    Sorpresa u = ultimaSorpresa;
     sorpresas.add(sorpresa);
     return sorpresa;   
     }

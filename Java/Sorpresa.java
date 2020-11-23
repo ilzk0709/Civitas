@@ -40,11 +40,12 @@ public class Sorpresa {
     public Sorpresa(TipoSorpresa _tipo) {
         init();
         tipo = _tipo;
-        if (tipo == TipoSorpresa.PAGARCOBRAR){
+        if (tipo == TipoSorpresa.PAGARCOBRAR)
             valor = 10;
-        } else if (tipo == TipoSorpresa.PORCASAHOTEL){
+        else if (tipo == TipoSorpresa.PORCASAHOTEL)
             valor = 10;
-        }
+        else if (tipo == TipoSorpresa.PORJUGADOR)
+            valor = 10;
     }
     
     /**Constructor de sorpresa que crea la sorpresa que envia a la carcel
@@ -57,7 +58,7 @@ public class Sorpresa {
         if (_tipo == TipoSorpresa.IRCARCEL) {
             init();
             tipo = _tipo;
-            texto = "El/La jugador/a va a la carcel";
+            texto = "El jugador va a la carcel";
             tablero = _tablero;
             valor = tablero.getCarcel();
         }
@@ -77,7 +78,7 @@ public class Sorpresa {
             tipo = _tipo;
             valor = numCasilla;
             tablero = _tablero;
-            texto = "El/La jugador/a va a la casilla " + numCasilla; 
+            texto = "El jugador va a la casilla " + numCasilla; 
         }else
             System.err.println("Constructor inadecuado");
     }
@@ -90,7 +91,7 @@ public class Sorpresa {
         if (_tipo == TipoSorpresa.SALIRCARCEL) {
             init();
             tipo = _tipo;
-            texto = "El/La jugador/a puede salir de la carcel si cae en ella";
+            texto = "El jugador puede salir de la carcel si cae en ella";
             mazo = _mazo;
         }else
             System.err.println("Constructor inadecuado");
@@ -231,16 +232,22 @@ public class Sorpresa {
         switch (tipo){
             case IRCARCEL:
                 devolver = "Ir carcel";
+                break;
             case IRCASILLA:
                 devolver = "Ir casilla";
+                break;
             case PAGARCOBRAR:
                 devolver = "Pagar cobrar";
+                break;
             case PORCASAHOTEL:
                 devolver = "Por casa hotel";
+                break;
             case PORJUGADOR:
                 devolver = "Por jugador";
+                break;
             case SALIRCARCEL:
                 devolver = "Salir carcel";
+                break;
         }
         return devolver;
     }

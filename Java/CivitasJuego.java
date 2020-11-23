@@ -21,7 +21,7 @@ public class CivitasJuego {
     private static final float PRECIO_ALQUILER = 10,
         FACTOR_REVALORACION = 10,
         PRECIO_HIPOTECA = 10,
-        PRECIO_COMPRA = 10,
+        PRECIO_COMPRA = 7270,
         PRECIO_EDIFICACION = 20,
         IMPUESTO = 20;
         
@@ -77,7 +77,7 @@ public class CivitasJuego {
         }
         gestor = new GestorEstados();
         gestor.estadoInicial();
-        mazo = new MazoSorpresas();
+        mazo = new MazoSorpresas(true);
         indiceJugadorActual = Dado.getInstance().quienEmpieza(jugadores.size());
         estado = EstadosJuego.INICIO_TURNO;
         inicializarTablero(mazo);
@@ -134,7 +134,6 @@ public class CivitasJuego {
         for (int i = 0; i < jugadores.size() && !fin; i++) {
             if (jugadores.get(i).getSaldo()== 0) {
                 fin = true;
-                jugadores = ranking();
             }
         }
         return fin;
@@ -204,6 +203,8 @@ public class CivitasJuego {
         tablero = new Tablero(10);
         tablero.aniadeCasilla(new Casilla("PARKING"));
         tablero.aniadeCasilla(new Casilla(IMPUESTO, "IMPUESTO"));
+        for (int i = 0; i < NUM_SORPRESAS; i++) {
+            tablero.aniadeCasilla(new Casilla(mazo, "SORPRESA")); }
         ArrayList<TituloPropiedad> titulos = new ArrayList<>();
         String nombre_propiedad;
         for (int i = 0; i < NUM_PROPIEDADES + 1; i++) {
@@ -211,8 +212,6 @@ public class CivitasJuego {
             titulos.add(new TituloPropiedad(nombre_propiedad, PRECIO_ALQUILER, FACTOR_REVALORACION, PRECIO_HIPOTECA, PRECIO_COMPRA, PRECIO_EDIFICACION)); }   
         for (int i = 0; i < NUM_PROPIEDADES; i++) {
             tablero.aniadeCasilla(new Casilla(titulos.get(i))); }
-        for (int i = 0; i < NUM_SORPRESAS; i++) {
-            tablero.aniadeCasilla(new Casilla(mazo, "SORPRESA")); }
         tablero.aniadeJuez();
         
         inicializarMazoSorpresas(tablero);
@@ -266,15 +265,24 @@ public class CivitasJuego {
      * Ordena los jugadores segun su saldo
      * @return El vector ordenado de jugadores segun su saldo
      */
-    private ArrayList<Jugador> ranking() {
+    public ArrayList<Jugador> ranking() {
         ArrayList<Jugador> ranking = new ArrayList<>();
-        int comprobante = 0;
-        for (int i = 0; i < jugadores.size(); i++) {
-            comprobante = jugadores.get(i).compareTo(jugadores.get(i+1));
-            if (comprobante == 1)
-                ranking.add(jugadores.get(i));
-            else
-                ranking.add(jugadores.get(i+1));
+        int comprobante = 0, num_inicial = jugadores.size();
+        boolean es_maximo;
+        while (ranking.size() < num_inicial) {
+            for (int i = jugadores.size()-1; i >= 0; i--) {
+                Jugador actual = jugadores.get(i);
+                es_maximo = true;
+                for (int j = 0; j < jugadores.size() && es_maximo; j++) {
+                    comprobante = actual.compareTo(jugadores.get(j));
+                    if (comprobante == -1)
+                        es_maximo = false;
+                }
+                if (es_maximo) {
+                    ranking.add(actual);
+                    jugadores.remove(i);
+                }
+            }
         }
         return ranking;
     }
@@ -315,7 +323,7 @@ public class CivitasJuego {
      * @param operacion 
      */
     public void siguientePasoCompletado(OperacionesJuego operacion) {
-        gestor.siguienteEstado(jugadores.get(indiceJugadorActual), estado, operacion);
+        estado = gestor.siguienteEstado(jugadores.get(indiceJugadorActual), estado, operacion);
     }
     /**Aplica el metodo vender al jugador actual en la propiedad del indice ip
      * 
