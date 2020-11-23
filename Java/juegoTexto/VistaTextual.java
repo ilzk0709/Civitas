@@ -87,8 +87,16 @@ class VistaTextual {
       int opcion = menu ("Que gestion vas a hacer?",
       new ArrayList<> (Arrays.asList("Vender","Hipotecar","Cancelar hipoteca","Construir casa","Construir hotel","Terminar")));
       iGestion = opcion;
-      Jugador jugador = juegoModel.getJugadorActual();
-      //Consultar titulopropiedad
+      if (iGestion != 5) {
+        ArrayList<TituloPropiedad> titulos = new ArrayList<>(juegoModel.getJugadorActual().getPropiedades());
+        ArrayList<String> nombres = new ArrayList<>();  
+        for (int i = 0; i < titulos.size(); i++) {
+              nombres.add(titulos.get(i).toString());
+          }
+        opcion = menu ("Con que propiedad?",
+        nombres);
+        iPropiedad = opcion;
+      }
   }
   
   public int getGestion(){

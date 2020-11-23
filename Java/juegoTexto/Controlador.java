@@ -12,6 +12,8 @@ import civitas.OperacionInmobiliaria;
 import civitas.OperacionesJuego;
 import civitas.TituloPropiedad;
 import civitas.Jugador;
+import java.util.ArrayList;
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 /**
  *
  * @author ilzk
@@ -32,20 +34,20 @@ public class Controlador {
         while (!juego.finalDelJuego()) {
             vista.actualizarVista();
             vista.pausa();
-            if (juego.siguientePaso() != OperacionesJuego.PASAR_TURNO) {
+            OperacionesJuego operacionj = juego.siguientePaso();
+            if (operacionj != OperacionesJuego.PASAR_TURNO) 
                 while (Diario.getInstance().eventosPendientes()) {
                     System.out.println("-----------------------------\n" + Diario.getInstance().leerEvento());
                 }
-                System.out.println("______________________________");
-            }
+            System.out.println("______________________________");
             if (!juego.finalDelJuego()) {
-                OperacionesJuego operacionj = juego.siguientePaso();
+               // OperacionesJuego operacionj = juego.siguientePaso();
                 switch (operacionj) {
                     case COMPRAR:
                         if (vista.comprar() == Respuestas.SI){
                             juego.comprar();
-                            juego.siguientePasoCompletado(OperacionesJuego.COMPRAR);
                         }
+                        juego.siguientePasoCompletado(operacionj);
                         break;
                     case GESTIONAR:
                         vista.gestionar();
@@ -84,13 +86,12 @@ public class Controlador {
                         juego.siguientePasoCompletado(operacionj);
                         break;
                 }
-                
             }
         }
-        //Necesita retocar
-        for (int i = 0; i < 4; i++) {
-            System.err.println(juego.getJugadorActual().toString());
-            juego.siguientePasoCompletado(OperacionesJuego.PASAR_TURNO);
+            System.out.println("\nFIN DEL JUEGO.\n =======RANKING=======");
+            ArrayList<Jugador> ranking = juego.ranking();
+        for (int i = 0; i < 4.; i++) {
+            System.out.println(ranking.get(i).toString() + "\n ---------------");
         }
     }
 }

@@ -6,7 +6,6 @@
 package juegoTexto;
 import civitas.*;
 import java.util.ArrayList;
-
 /**
  *
  * @author ilzk
@@ -18,7 +17,7 @@ public class Test_P2 {
         nombres.add("Miguel");
         nombres.add("Roberro");
         nombres.add("Ca?as");
-        nombres.add("B de Brian");
+        nombres.add("Brian");
         CivitasJuego juego = new CivitasJuego(nombres);
         Dado.getInstance().setDebug(true);
         Controlador control = new Controlador(juego, vista);
