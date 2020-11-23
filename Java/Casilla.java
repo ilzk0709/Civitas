@@ -11,8 +11,8 @@ import java.util.ArrayList;
  */
 public class Casilla {
     
-   //Atributos de la clase
     static private int carcel;
+   //Atributos de instancia
     private String nombre = "";
     private float importe = 0;
    //Relaciones con las demas clases
@@ -46,8 +46,10 @@ public class Casilla {
      */
     Casilla(TituloPropiedad titulo) {
         init();
+        nombre = titulo.getNombre();
         tipo = TipoCasilla.CALLE;
         tituloPropiedad = titulo;
+        importe = titulo.getPrecioCompra();
     }
     
     /**Constructor para las casillas de tipo impuesto
@@ -108,7 +110,9 @@ public class Casilla {
      * @param todos 
      */
     void informe(int actual, ArrayList<Jugador> todos) {
-        Diario.getInstance().ocurreEvento("El jugador " + todos.get(actual).getNombre() + " ha caido en la casilla de caracteristicas " + toString());
+        Diario.getInstance().ocurreEvento("El jugador " + todos.get(actual).getNombre() + 
+                " ha caido en la casilla " + todos.get(actual).getNumCasillaActual() +
+                "\n" + toString());
     }
     
     /**Comprueba que existe un jugador en todos en la posicion actual
@@ -138,11 +142,13 @@ public class Casilla {
                 break;
             case SORPRESA:
                 recibeJugador_sorpresa(actual, todos);
+                break;
             case DESCANSO:
                 informe(actual, todos);
+                break;
         }
     }
-    //Siguiente practica
+    
     private void recibeJugador_calle(int actual, ArrayList<Jugador> todos){
         if (jugadorCorrecto(actual, todos)) {
             informe(actual, todos);
@@ -197,7 +203,7 @@ public class Casilla {
      * @return tipo de la casilla, nombre e importe
      */
     public String toString() {
-        String devolver = "La casilla es de tipo " + tipo.toString() + ", su nombre es " + nombre + " y su importe es " + importe;
+        String devolver = "Tipo: " + tipo.toString() + "\nNombre: " + nombre + "\nImporte: " + importe;
         return devolver;
     }
 }

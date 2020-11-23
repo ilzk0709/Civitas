@@ -40,27 +40,27 @@ public class Sorpresa {
     public Sorpresa(TipoSorpresa _tipo) {
         init();
         tipo = _tipo;
-        if (tipo == TipoSorpresa.PAGARCOBRAR){
-            //Falta ver cuando estos valores son negativos
+        if (tipo == TipoSorpresa.PAGARCOBRAR)
             valor = 10;
-        } else if (tipo == TipoSorpresa.PORCASAHOTEL){
-            valor = 3;
-        }
+        else if (tipo == TipoSorpresa.PORCASAHOTEL)
+            valor = 10;
+        else if (tipo == TipoSorpresa.PORJUGADOR)
+            valor = 10;
     }
     
     /**Constructor de sorpresa que crea la sorpresa que envia a la carcel
      * 
-     * @param tipo el tipo de la sorpresa a crear
-     * @param tablero el tablero del que se obtiene el numCasillaCarcel
+     * @param _tipo el tipo de la sorpresa a crear
+     * @param _tablero el tablero del que se obtiene el numCasillaCarcel
      */
     
     public Sorpresa(TipoSorpresa _tipo, Tablero _tablero) {
         if (_tipo == TipoSorpresa.IRCARCEL) {
             init();
             tipo = _tipo;
-            texto = "El/La jugador/a va a la carcel";
+            texto = "El jugador va a la carcel";
             tablero = _tablero;
-            int numCarcel = tablero.getCarcel();
+            valor = tablero.getCarcel();
         }
         else
             System.err.println("Constructor inadecuado");
@@ -74,9 +74,11 @@ public class Sorpresa {
      */
     public Sorpresa(TipoSorpresa _tipo, Tablero _tablero, int numCasilla) {
         if (_tipo == TipoSorpresa.IRCASILLA) {
+            init();
             tipo = _tipo;
             valor = numCasilla;
-            texto = "El/La jugador/a va a la casilla " + numCasilla; 
+            tablero = _tablero;
+            texto = "El jugador va a la casilla " + numCasilla; 
         }else
             System.err.println("Constructor inadecuado");
     }
@@ -87,9 +89,10 @@ public class Sorpresa {
      */
     public Sorpresa(TipoSorpresa _tipo, MazoSorpresas _mazo) {
         if (_tipo == TipoSorpresa.SALIRCARCEL) {
-            tipo = _tipo;
-            texto = "El/La jugador/a puede salir de la carcel si cae en ella";
             init();
+            tipo = _tipo;
+            texto = "El jugador puede salir de la carcel si cae en ella";
+            mazo = _mazo;
         }else
             System.err.println("Constructor inadecuado");
     }
@@ -138,7 +141,7 @@ public class Sorpresa {
             tirada = tablero.nuevaPosicion(casillaActual, valor);
             tablero.calcularTirada(casillaActual, valor);
             todos.get(actual).moverACasilla(tirada);
-            tablero.getCasilla(tirada).recibeJugador();
+            tablero.getCasilla(tirada).recibeJugador(actual,todos);
         }
     }
     
@@ -178,11 +181,14 @@ public class Sorpresa {
         if(jugadorCorrecto(actual, todos)) {
             informe(actual,todos);
             Sorpresa quitar = new Sorpresa(TipoSorpresa.PAGARCOBRAR);
-            
+            quitar.valor = -valor;
+                for (int i = 0; i < todos.size(); i++) {
+                    if (i != actual)
+                        quitar.aplicarAJugador(i, todos);
+                }
             Sorpresa dar = new Sorpresa(TipoSorpresa.PAGARCOBRAR);
-            for (int i = 0; i < todos.size(); i++) {
-                todos.get(actual).modificarSaldo(valor);
-            }
+            dar.valor = valor * todos.size();
+            dar.aplicarAJugador(actual, todos);
         }
     }
     /**Aplica la sorpresa Salir carcel al jugador actual
@@ -226,16 +232,22 @@ public class Sorpresa {
         switch (tipo){
             case IRCARCEL:
                 devolver = "Ir carcel";
+                break;
             case IRCASILLA:
                 devolver = "Ir casilla";
+                break;
             case PAGARCOBRAR:
                 devolver = "Pagar cobrar";
+                break;
             case PORCASAHOTEL:
                 devolver = "Por casa hotel";
+                break;
             case PORJUGADOR:
                 devolver = "Por jugador";
+                break;
             case SALIRCARCEL:
                 devolver = "Salir carcel";
+                break;
         }
         return devolver;
     }

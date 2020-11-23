@@ -6,6 +6,7 @@
 package civitas;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 /**
  *
@@ -46,15 +47,12 @@ public class MazoSorpresas {
     }
     
     public Sorpresa siguiente() {
-    Sorpresa sorpresa = new Sorpresa();
+    Sorpresa sorpresa = new Sorpresa(TipoSorpresa.PORJUGADOR);
     Random random = new Random();
     int ind = 0;
     if (!barajada || usadas == sorpresas.size()) 
         if (!debug) {
-            for (int i = 0; i < sorpresas.size(); i++) {
-                ind = random.nextInt(sorpresas.size());
-                sorpresas.set(i, sorpresas.get(ind));
-            }
+            Collections.shuffle(sorpresas);
             usadas = 0;
             barajada = true;
         }
@@ -62,16 +60,18 @@ public class MazoSorpresas {
     sorpresa = sorpresas.get(0);
     ultimaSorpresa = sorpresas.get(0);
     sorpresas.remove(0);
+    Sorpresa u = ultimaSorpresa;
     sorpresas.add(sorpresa);
     return sorpresa;   
     }
     
     public void inhabilitarCartaEspecial(Sorpresa sorpresa) {
         while (sorpresas.contains(sorpresa)) {
-            if (sorpresas.remove(sorpresa));
+                int indice = sorpresas.lastIndexOf(sorpresa);
+                sorpresas.remove(indice);
                 cartasEspeciales.add(sorpresa);
                 Diario.getInstance().ocurreEvento("Se ha aniadido " + sorpresa +
-                        "al mazo de cartas especiales");
+                        "[" + indice + "] al mazo de cartas especiales");
         }
     }
     
