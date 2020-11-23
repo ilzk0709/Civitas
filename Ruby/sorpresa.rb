@@ -26,11 +26,16 @@ module Civitas
       end
     end
     
-    def self.new_sorpresa_ir_carcel(_tipo, _tablero)
+    def self.new_sorpresa_ir_carcel(_tablero)
       new(Tipo_sorpresa::IRCARCEL, "Ir carcel", -1, nil, _tablero)
     end
     
-    def self.new_sorpresa_ir_casilla()
+    def self.new_sorpresa_ir_casilla(_tablero, _num_casilla)
+      new(Tipo_sorpresa::IRCASILLA, "Ir casilla", _num_casilla, nil, _tablero)
+    end
+    def self.new_salir_carcel( _mazo)
+      new(Tipo_sorpresa::SALIRCARCEL, "Salir carcel", -1, _mazo)
+    end
     
     def jugador_correcto(actual, todos)
       actual >= 0 && todos.size > actual

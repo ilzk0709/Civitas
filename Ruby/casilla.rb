@@ -109,8 +109,5 @@ module Civitas
       "Tipo: " + @tipo + "\nNombre: " + @nombre + "\nImporte: " + @importe
     end
   end
-  
-  puts Casilla.new.inspect
-
 end
 

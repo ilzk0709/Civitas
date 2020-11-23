@@ -2,7 +2,18 @@
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
 @@CARCEL = 10
+@@NUM_PROPIEDADES = 12
+@@NUM_SORPRESAS = 3,
+@@CASILLAS_TABLERO = 20;
+@@PRECIO_ALQUILER = 10,
+@@FACTOR_REVALORACION = 10,
+@@PRECIO_HIPOTECA = 10,
+@@PRECIO_COMPRA = 7270,
+@@PRECIO_EDIFICACION = 20,
+@@IMPUESTO = 20;
 
+require_relative 'casilla'
+require_relative 'jugador'
 
 module Civitas
   srand()
@@ -81,9 +92,41 @@ module Civitas
     end
     
     private
+    def inicializar_mazo_sorpresas(_tablero)
+      s = Sorpresa.new_salir_carcel(@mazo)
+      @mazo.al_mazo(s)
+      @mazo.habilitar_carta_especial(s)
+      s = Sorpresa.new_sorpresa_pagcob(Tipo_sorpresa::PAGARCOBRAR)
+      @mazo.al_mazo(s)
+      @mazo.habilitar_carta_especial(s)
+      s = Sorpresa.new_sorpresa_pagcob(Tipo_sorpresa::PORJUGADOR)
+      @mazo.al_mazo(s)
+      @mazo.habilitar_carta_especial(s)
+      s = Sorpresa.new_sorpresa_pagcob(Tipo_sorpresa::PORCASAHOTEL)
+      @mazo.al_mazo(s)
+      @mazo.habilitar_carta_especial(s)
+      s = Sorpresa.new_sorpresa_ir_carcel(@tablero)
+      @mazo.al_mazo(s)
+      @mazo.habilitar_carta_especial(s)
+      numcas = rand(@@CASILLAS_TABLERO)+1.to_i
+      s = Sorpresa.new_sorpresa_ir_casilla(@tablero, numcas)
+      @mazo.al_mazo(s)
+      @mazo.habilitar_carta_especial(s)
+    end
+    
+    private
     def inicializar_tablero(_mazo)
       @tablero = Tablero.new(@@CARCEL)
-      tablero.aniade_casilla(Casilla.new("", _importe, nil, _sorpresa, _titulo_propiedad, _tipo))
+      tablero.aniade(Casilla.new_casilla_descanso("PARKING"))
+      tablero.aniade(Casilla.new_casilla_impuesto("IMPUESTO", @@IMPUESTO))
+      for i in @@NUM_PROPIEDADES
+        tablero.aniade_casilla(Casilla.new_casilla_calle(TituloPropiedad.new("CALLE " + i.to_s, @@PRECIO_ALQUILER, @@FACTOR_REVALUACION, @@PRECIO_HIPOTECA, @@PRECIO_COMPRA, @@PRECIO_EDIFICACION)))
+      end
+      for j in @@NUM_SORPRESAS
+        tablero.aniade_casilla(Casilla.new_casilla_sorpresa(@mazo, "SORPRESA"))
+      end
+      tablero.aniade_juez
+      inicializar_mazo_sorpresas(@tablero)
     end
     
     private
@@ -123,6 +166,17 @@ module Civitas
       @jugadores[@indice_jugador_actual].salirCarcelTirando
     end
     
+    def siguiente_paso
+      operacion = @gestor.operaciones_permitidas(@jugadores[@indice_jugador_actual], @estado)
+      if (operacion == Operaciones_juego::PASAR_TURNO)
+        pasar_turno
+        siguiente_paso_completado(operacion)
+      else if (operacion == Operaciones_juego::AVANZAR)
+        avanza_jugador
+        siguiente_paso_completado(operacion)
+        end
+      end
+    end
     def siguiente_paso_completado(operacion)
       @estado = @gestor.siguiente_estado(@jugadores[@indice_jugador_actual], @estado, operacion)
     end
