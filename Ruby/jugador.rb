@@ -14,6 +14,14 @@ module Civitas
     @@PASO_POR_SALIDA = 1000
     @@PRECIO_POR_LIBERTAD = 200
     
+    def puede_comprar
+      return @puedeComprar
+    end
+    
+    def tiene_algo_que_gestionar
+      tieneAlgoQueGestionar
+    end
+    
     def initialize(nomb, jug = nil)
       if(jug == nil)
         @nombre = nomb
@@ -101,7 +109,7 @@ module Civitas
       else
         @numCasillaActual = numCasilla
         @puedeComprar = false
-        Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + "se mueve a " + @numCasillaActual.to_s)
+        Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " se mueve a " + @numCasillaActual.to_s)
       end
       
       return b
@@ -120,7 +128,7 @@ module Civitas
     end
     
     def paga(cantidad)
-      return modificarSaldo(cantidad * -1)
+      return modificarSaldo((-1)*cantidad.to_i)
     end
     
     def pagaAlquiler(cantidad)
@@ -149,7 +157,7 @@ module Civitas
     
     def pasaPorSalida()
       modificarSaldo(PASO_POR_SALIDA)
-      Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + "ha pasado por salida")
+      Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " ha pasado por salida")
       return true
     end
     
@@ -386,7 +394,7 @@ module Civitas
       return result
     end
     
-    def toString()
+    def to_s
       return "Jugador: " + @nombre + "\n"
       + "Encarcelado?: " + @encarcelado + "\n"
       + "Saldo: " + @saldo + "\n"

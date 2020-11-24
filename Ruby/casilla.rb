@@ -43,8 +43,8 @@ module Civitas
     end
     
     def informe(actual, todos)
-      Diario.instance.ocurre_evento("El jugador" + todos[actual].to_s + 
-          " ha caido en la casilla" + todos[actual].numCasillaActual.to_s + "\n" + self.to_s)
+      Diario.instance.ocurre_evento("El jugador " + todos[actual].to_s + 
+          " ha caido en la casilla" + todos[actual].numCasillaActual.to_s + "\n" + to_s)
     end
     
     def jugador_correcto(actual, todos)
@@ -105,8 +105,8 @@ module Civitas
       end
     end
     
-    def self.to_s
-      "Tipo: " + @tipo + "\nNombre: " + @nombre + "\nImporte: " + @importe
+    def to_s
+      "Tipo: " + @tipo.to_s + "\nNombre: " + @nombre.to_s + "\nImporte: " + @importe.to_s
     end
   end
 end

@@ -141,7 +141,7 @@ module Civitas
     def pasar_turno
       @indice_jugador_actual += 1
       if (@indice_jugador_actual == @jugadores.size)
-        @indice_jugador_actual = 0
+        @indice_jugador_actual = 1
       end
     end
     
