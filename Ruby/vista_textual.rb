@@ -1,13 +1,14 @@
 #encoding:utf-8
-require_relative 'operaciones_juego'
+require_relative 'estados_juego'
 require 'io/console'
 require_relative 'diario'
 
-attr_reader :i_gestion, :i_propiedad
 module JuegoTexto
   
   class Vista_textual
-
+    
+    attr_reader :i_gestion, :i_propiedad
+    
     def mostrar_estado(estado)
       puts estado
     end

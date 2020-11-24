@@ -43,25 +43,25 @@ module Civitas
     end
     
     def informe(actual, todos)
-      Diario.instance.ocurre_evento("El jugador" + todos[actual] + 
-          " ha caido en la casilla" + todos[actual].numCasillaActual + "\n" + to_s())
+      Diario.instance.ocurre_evento("El jugador" + todos[actual].to_s + 
+          " ha caido en la casilla" + todos[actual].numCasillaActual.to_s + "\n" + self.to_s)
     end
     
     def jugador_correcto(actual, todos)
       actual >= 0 && actual < todos.size()
     end
-    
+    public
     def recibe_jugador(actual, todos)
       case @tipo
-      when Tipo_casilla.CALLE
+      when Tipo_casilla::CALLE
         recibe_jugador_calle(actual, todos)
-      when Tipo_casilla.SORPRESA
+      when Tipo_casilla::SORPRESA
         recibe_jugador_sorpresa(actual, todos)
-      when Tipo_casilla.IMPUESTO
+      when Tipo_casilla::IMPUESTO
         recibe_jugador_impuesto(actual, todos)
-      when Tipo_casilla.DESCANSO
+      when Tipo_casilla::DESCANSO
         informe(actual,todos)
-      when Tipo_casilla.JUEZ
+      when Tipo_casilla::JUEZ
         recibe_jugador_juez(actual, todos)
       end
     end
@@ -105,7 +105,7 @@ module Civitas
       end
     end
     
-    def to_s
+    def self.to_s
       "Tipo: " + @tipo + "\nNombre: " + @nombre + "\nImporte: " + @importe
     end
   end

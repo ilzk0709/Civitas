@@ -14,21 +14,21 @@ module JuegoTexto
       while (@juego.final_del_juego)
         @vista.actualizarVista
         @vista.pausa
-        if (@juego.siguiente_paso != Operaciones_juego::PASAR_TURNO)
-          while Diario.instance.eventos_pendientes
-            puts Diario.instance.leer_evento
+        if (@juego.siguiente_paso != Civitas::Operaciones_juego::PASAR_TURNO)
+          while Civitas::Diario.instance.eventos_pendientes
+            puts Civitas::Diario.instance.leer_evento
             puts "-------------------------------------"
           end
           puts "______________________________________"
         end
         if (!@juego.final_del_juego)
           case @juego.siguiente_paso
-          when Operaciones_juego::COMPRAR
+          when Civitas::Operaciones_juego::COMPRAR
             if (@vista.comprar() == Respuestas::SI)
               @juego.comprar()
             end
             @juego.siguiente_paso_completado(@juego.siguiente_paso)
-          when Operaciones_juego::GESTIONAR
+          when Civitas::Operaciones_juego::GESTIONAR
             gestion = lista_gestiones[@vista.i_gestion]
             propiedad = @vista.i_propiedad
             case gestion
@@ -44,7 +44,7 @@ module JuegoTexto
               when Gestiones_inmobiliarias::CONSTRUIR_HOTEL
                 @juego.construir_hotel(propiedad)
             end
-          when Operaciones_juego::SALIR_CARCEL
+          when Civitas::Operaciones_juego::SALIR_CARCEL
             case(@vista.salir_carcel)
             when Salidas_carcel::PAGANDO
               @juego.salir_carcel_pagando

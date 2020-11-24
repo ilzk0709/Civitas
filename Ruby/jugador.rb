@@ -7,22 +7,22 @@ module Civitas
     
     attr_accessor :nombre, :CASAS_MAX, :HOTELES_MAX, :CASAS_POR_HOTEL, :numCasillaActual, :PRECIO_POR_LIBERTAL,  :PASO_POR_SALIDA, :propiedades, :puedeComprar, :saldo, :encarcelado
     
-    CASAS_MAX = 4
-    HOTELES_MAX = 4
-    SALDO_INICIAL = 7500
-    CASAS_POR_HOTEL = 4
-    PASO_POR_SALIDA = 1000
-    PRECIO_POR_LIBERTAD = 200
+    @@CASAS_MAX = 4
+    @@HOTELES_MAX = 4
+    @@SALDO_INICIAL = 7500
+    @@CASAS_POR_HOTEL = 4
+    @@PASO_POR_SALIDA = 1000
+    @@PRECIO_POR_LIBERTAD = 200
     
     def initialize(nomb, jug = nil)
-      if(jug != nil)
+      if(jug == nil)
         @nombre = nomb
         @propiedades = []
         @encarcelado = false
         @numCasillaActual = 0
         @puedeComprar = true
-        @saldo = SaldoInicial
-        @salvoconducto = Sorpresa.new  
+        @saldo = @@SALDO_INICIAL
+        @salvoconducto = nil
       else
         @propiedades = jug.propiedades[0..jug.propiedades.size-1]
         @nombre = jug.nombre
