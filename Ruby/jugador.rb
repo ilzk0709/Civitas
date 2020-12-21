@@ -22,23 +22,18 @@ module Civitas
       tieneAlgoQueGestionar
     end
     
-    def initialize(nomb, jug = nil)
-      if(jug == nil)
-        @nombre = nomb
-        @propiedades = []
-        @encarcelado = false
-        @numCasillaActual = 0
-        @puedeComprar = true
-        @saldo = @@SALDO_INICIAL
-        @salvoconducto = nil
-      else
-        @propiedades = jug.propiedades[0..jug.propiedades.size-1]
-        @nombre = jug.nombre
-        @encarcelado = jug.encarcelado
-        @numCasillaActual = jug.numCasillaActual
-        @puedeComprar = jug.puedeComprar
-        @saldo = jug.saldo
-      end
+    def initialize(nombre, encarcelado = false, numCasillaActual = 0, puedeComprar = false, saldo = @@SALDO_INICIAL, salvoconducto = nil, propiedades = Array.new)
+      @nombre = nombre
+      @encarcelado = encarcelado
+      @numCasillaActual = numCasillaActual
+      @puedeComprar = puedeComprar
+      @saldo = saldo
+      @salvoconducto = salvoconducto
+      @propiedades = propiedades
+    end
+    
+    def self.otro(otro)
+      new(otro.nombre, otro.encarcelado, otro.numCasillaActual, otro.puedeComprar, otro.saldo, otro.salvoconducto, otro.propiedades)
     end
     
     def cantidadCasasHoteles()
@@ -53,7 +48,7 @@ module Civitas
       encarcelar = false
       
       if(!@encarcelado)
-        if(tieneSalvoconducto())
+        if(!tieneSalvoconducto())
           perderSalvoconducto()
           encarcelar = false
           Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + "se libra de carcel")
@@ -77,9 +72,9 @@ module Civitas
     
     def encarcelar(numCasillaCarcel)
       if(debeSerEncarcelado())
-        moverACasilla(numCasillaCarcel)
+        moverAcasilla(numCasillaCarcel)
         @encarcelado = true
-        Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " va a la carcel")
+        Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + "va a la carcel")
       end
       
       return @encarcelado
@@ -156,12 +151,12 @@ module Civitas
     end
     
     def pasaPorSalida()
-      modificarSaldo(@@PASO_POR_SALIDA)
+      modificarSaldo(PASO_POR_SALIDA)
       Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " ha pasado por salida")
       return true
     end
     
-    def perderSalvoconducto
+    def perderSalvoConducto
       @salvoconducto.usada()
       @salvoconducto = nil
     end
@@ -176,25 +171,16 @@ module Civitas
       return @puedeComprar
     end
     
-    def salirCarcelPagando()
+    def puedeSalirCarcelPagando()
       b = false
       
       if(@saldo >= @@PRECIO_POR_LIBERTAD)
         b = true
-        @saldo = @saldo - @@PRECIO_POR_LIBERTAD
       end
       
       return b
     end
-     def salirCarcelTirando
-      b = false
-      tirada = Dado.instance.tirar
-      if(tirada > 5)
-        b = true
-      end
-      
-      return b
-    end
+    
     def puedeEdificarCasa(propiedad)
       b = false
       
@@ -277,9 +263,9 @@ module Civitas
         b = false
       else
         if(existeLaPropiedad(ip))
-          if(@propiedades[ip].vender(self))
-            Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " vende " + @propiedades[ip].nombre)
+          if(@propiedades[ip].vender(this))
             @propiedades.delete_at(ip)
+            Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " vende " + @propiedades[ip].nombre.to_s)
             b = true
           end
         end
@@ -302,7 +288,7 @@ module Civitas
         puedoGastar = puedoGastar(cantidad)
         
         if(puedoGastar)
-          result = propiedad.cancelarHipoteca(self)
+          result = propiedad.cancelarHipoteca(this)
         end
         
         if(result)
@@ -324,12 +310,12 @@ module Civitas
         precio = propiedad.precioCompra
         
         if(puedoGastar(precio))
-          result = propiedad.comprar(self)
+          result = propiedad.comprar(this)
         end
         
         if(result)
           @propiedades.push(propiedad)
-          Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " compra propiedad " + propiedad.to_s())
+          Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " compra propiedad " + propiedad.toString())
         end
       end
       
@@ -346,12 +332,12 @@ module Civitas
       if(existeLaPropiedad(ip))
         propiedad = TituloPropiedad.new
         propiedad = @propiedades[ip]
-        puedoEdificarHotel = puedeEdificarHotel(propiedad)
+        puedoEdificarHotel = puedoEdificarHotel(propiedad)
         precio = propiedad.precioEdificar
         
         if(puedoEdificarHotel)
-          result = propiedad.construirHotel(self)
-          propiedad.derruirCasas(@@CASAS_POR_HOTEL, self)
+          result = propiedad.construirHotel(this)
+          propiedad.derruirCasas(CASAS_POR_HOTEL, this)
           Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " construye hotel en " + @propiedades[ip].nombre.to_s)
         end
       end
@@ -367,9 +353,9 @@ module Civitas
       end
       
       if(existeLaPropiedad(ip))
-        propiedad = TituloPropiedad.new()
+        propiedad = TituloPropiedad.new
         propiedad = @propiedades[ip]
-        result = propiedad.hipotecar(self)
+        result = propiedad.hipotecar(this)
       end
       
       if(result)
@@ -391,10 +377,11 @@ module Civitas
       if(existe)
         propiedad = TituloPropiedad.new
         propiedad = @propiedades[ip]
-        puedoEdificar = puedeEdificarCasa(propiedad)
+        puedoEdificar = puedoEdificar(propiedad)
         precio = propiedad.precioEdificar
-        if(puedoEdificar)
-          result = propiedad.construirCasa(self)
+        
+        if(puedoEdficiar)
+          result = propiedad.construirCasa(this)
           Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " construye casa en " + @propiedades[ip].nombre.to_s)
         end
       end
@@ -403,7 +390,7 @@ module Civitas
     end
     
     def to_s
-      return "Jugador: " + @nombre + "\n" + "Encarcelado?: " + @encarcelado.to_s + "\n" + "Saldo: " + @saldo.to_s + "\n" + "Casilla Actual: " + @numCasillaActual.to_s
+      return "Jugador: " + @nombre.to_s + "\n " + "Encarcelado?: " + @encarcelado.to_s + "\n" + "Saldo: " + @saldo.to_s + "\n" + "Casilla Actual: " + @numCasillaActual.to_s
     end
   end
 end

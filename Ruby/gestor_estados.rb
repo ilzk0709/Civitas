@@ -76,13 +76,13 @@ module Civitas
 
       when Estados_juego::DESPUES_AVANZAR
         case operacion
-          when Operaciones_juego::PASAR_TURNO
-            siguiente = Estados_juego::INICIO_TURNO
-          when
-            Operaciones_juego::COMPRAR
-              siguiente = Estados_juego::DESPUES_COMPRAR
-          when Operaciones_juego::GESTIONAR
-              siguiente = Estados_juego::DESPUES_GESTIONAR
+        when Operaciones_juego::PASAR_TURNO
+          siguiente = Estados_juego::INICIO_TURNO
+        when
+          Operaciones_juego::COMPRAR
+          siguiente = Estados_juego::DESPUES_COMPRAR
+        when Operaciones_juego::GESTIONAR
+          siguiente = Estados_juego::DESPUES_GESTIONAR
         end
 
 
@@ -90,7 +90,7 @@ module Civitas
         #if (jugador.tiene_algo_que_gestionar)
         if (operacion==Operaciones_juego::GESTIONAR)
           siguiente = Estados_juego::DESPUES_GESTIONAR
-        #  end
+          #  end
         else
           if (operacion==Operaciones_juego::PASAR_TURNO)
             siguiente = Estados_juego::INICIO_TURNO

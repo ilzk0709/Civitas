@@ -57,8 +57,8 @@ module JuegoTexto
       }
 
       opcion = lee_entero(lista.length,
-                          "\n"+tab+"Elige una opción: ",
-                          tab+"Valor erróneo")
+        "\n"+tab+"Elige una opción: ",
+        tab+"Valor erróneo")
       return opcion
     end
 
@@ -69,25 +69,24 @@ module JuegoTexto
     end
 
     def comprar
-      lista_respuestas = [Respuestas::SI,Respuestas::NO]
+      lista_respuestas = [Respuestas::NO,Respuestas::SI]
       opcion = menu("Compras esta propiedad?", ["Si","No"])
       lista_respuestas[opcion]
     end
 
     def gestionar
-      lista_gestiones = [Gestiones_inmobiliarias::VENDER,Gestiones_inmobiliarias::HIPOTECAR,Gestiones_inmobiliarias::CANCELAR_HIPOTECA,Gestiones_inmobiliarias::CONSTRUIR_CASA,Gestiones_inmobiliarias::CONSTRUIR_HOTEL,Gestiones_inmobiliarias::TERMINAR]
+      lista_gestiones = [Gestiones_inmobiliarias::VENDER,Gestiones_inmobiliarias::HIPOTECAR,Gestiones_inmobiliarias::CANCELAR_HIPOTECA,Gestiones_inmobiliarias::TERMINARGestiones_inmobiliarias::CONSTRUIR_CASA,Gestiones_inmobiliarias::CONSTRUIR_HOTEL]
       opcion = menu("Que gestion vas a hacer?", ["Vender","Hipotecar","Cancelar hipoteca","Construir casa","Construir hotel","Terminar"])
       @i_gestion = opcion
       if (@i_gestion != 5)
         titulos = @juegoModel.get_jugador_actual.propiedades
         nombres = []
-        for i in 0..titulos.size-1
+        for i in titulos.size
           nombres[i] = titulos[i].to_s
         end
         opcion = menu("Con que propiedad?", nombres)
         @i_propiedad = opcion
       end
-      lista_gestiones[@i_gestion]#return para elegir en el main
     end
 
     def mostrarSiguienteOperacion(operacion)
@@ -101,8 +100,8 @@ module JuegoTexto
     end
 
     def setCivitasJuego(civitas)
-         @juegoModel=civitas
-         self.actualizarVista
+      @juegoModel=civitas
+      self.actualizarVista
     end
 
     def actualizarVista

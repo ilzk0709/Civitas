@@ -1,11 +1,5 @@
 #encondig:utf-8
 
-@@PRECIO_ALQUILER = 10
-@@FACTOR_REVALORACION = 10
-@@PRECIO_HIPOTECA = 10
-@@PRECIO_COMPRA = 7270
-@@PRECIO_EDIFICACION = 20
-
 require_relative "jugador"
 
 module Civitas
@@ -15,7 +9,7 @@ module Civitas
     
     FACTOR_INTERESES_HIPOTECA = 1.1
     
-    def initialize(nomb = "", prec_alquiler = @@PRECIO_ALQUILER, fac_reval = @@FACTOR_REVALORACION, prec_hipo = @@PRECIO_HIPOTECA, prec_compra = @@PRECIO_COMPRA, prec_edif = @@PRECIO_EDIFICACION)
+    def initialize(nomb, prec_alquiler, fac_reval, prec_hipo, prec_compra, prec_edif)
       @nombre = nomb
       @alquilerBase = prec_alquiler
       @factorRevalorizacion = fac_reval
@@ -44,7 +38,7 @@ module Civitas
     def getPrecioAlquiler()
       precio_alquiler = 0
       
-      if(!@hipotecado) && (@propietario == nil)
+      if(!@hipotecado) && (!@propietario)
         precio_alquiler = @alquilerBase * (1 + (@numCasas * 0.5) + (@numHoteles * 2.5))
       end
       
@@ -106,7 +100,7 @@ module Civitas
       vendido = false
       
       if(esEsteElPropietario(jug)) && (!@hipotecado)
-        @propietario.recibe(precioVenta())
+        @propietario.recibe(getPrecioVenta())
         @propietario = nil
         @numCasas = 0
         @numHoteles = 0
@@ -146,7 +140,7 @@ module Civitas
       
       if(esEsteElPropietario(jug))
         @propietario.paga(@precioEdificar)
-        @numHoteles += 1
+        @numCasas += 1
         result = true
       end
       
@@ -170,15 +164,15 @@ module Civitas
       
       if(esEsteElPropietario(jug))
         @propietario.paga(@precioEdificar)
-        @numCasas += 1
+        @numHoteles += 1
         result = true
       end
       
       return result
     end
     
-    def to_s()
-      "Nombre Propiedad: " + @nombre.to_s + "\n" + "Precio Alquiler: " + getPrecioAlquiler().to_s + "\n" + "Precio Compra: " + @precioCompra.to_s + "\n" + "Precio Edificacion: " + @precioEdificar.to_s + "\n" + "Precio Venta: " + precioVenta().to_s + "\n" + "Propietario: " + @propietario.nombre + "\n" + "Hipoteca: " + @hipotecaBase.to_s + "\n" + "Hipotecada: " + @hipotecado.to_s + "\n" + "Numero Casas: " + @numCasas.to_s + "\n" + "Numero Hoteles: " + @numHoteles.to_s;
+    def toString()
+      return "Nombre Propiedad: " + @nombre.to_s + "\n" + "Precio Alquiler: " + getPrecioAlquiler().to_s + "\n" + "Precio Compra: " + @precioCompra.to_s + "\n" + "Precio Edificacion: " + @precioEdificar.to_s + "\n" + "Precio Venta: " + getPrecioVenta().to_s + "\n" + "Propietario: " + @propietario.nombre + "\n" + "Hipoteca: " + @hipotecaBase.to_s + "\n" + "Hipotecada: " + @hipotecado.to_s + "\n" + "Numero Casas: " + @numCasas + "\n" + "Numero Hoteles: " + @numHoteles;
     end
   end
 end
