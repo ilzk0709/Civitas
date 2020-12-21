@@ -47,9 +47,7 @@ public class MazoSorpresas {
     }
     
     public Sorpresa siguiente() {
-    Sorpresa sorpresa = new Sorpresa(TipoSorpresa.PORJUGADOR);
-    Random random = new Random();
-    int ind = 0;
+    Sorpresa sorpresa = new Sorpresa_PagarCobrar();                             //No se que tipo poner
     if (!barajada || usadas == sorpresas.size()) 
         if (!debug) {
             Collections.shuffle(sorpresas);
@@ -60,7 +58,6 @@ public class MazoSorpresas {
     sorpresa = sorpresas.get(0);
     ultimaSorpresa = sorpresas.get(0);
     sorpresas.remove(0);
-    Sorpresa u = ultimaSorpresa;
     sorpresas.add(sorpresa);
     return sorpresa;   
     }

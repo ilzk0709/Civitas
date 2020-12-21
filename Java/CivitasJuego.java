@@ -177,23 +177,23 @@ public class CivitasJuego {
      * @param tablero 
      */
     private void inicializarMazoSorpresas(Tablero tablero) {
-        Sorpresa ircarcel = new Sorpresa(TipoSorpresa.IRCARCEL, tablero); 
+        Sorpresa ircarcel = new Sorpresa_IrCarcel(tablero); 
         mazo.alMazo(ircarcel);
         mazo.habilitarCartaEspecial(ircarcel);
         int numcasilla = aleatorio.nextInt(CASILLAS_TABLERO + 1); 
-        Sorpresa ircasilla = new Sorpresa(TipoSorpresa.IRCASILLA, tablero, numcasilla); 
+        Sorpresa ircasilla = new Sorpresa_IrCasilla(tablero, numcasilla); 
         mazo.alMazo(ircasilla);
         mazo.habilitarCartaEspecial(ircasilla);
-        Sorpresa pagarcobrar = new Sorpresa(TipoSorpresa.PAGARCOBRAR); 
+        Sorpresa pagarcobrar = new Sorpresa_PagarCobrar(); 
         mazo.alMazo(pagarcobrar);
         mazo.habilitarCartaEspecial(pagarcobrar);
-        Sorpresa porcasahotel = new Sorpresa(TipoSorpresa.PORCASAHOTEL); 
+        Sorpresa porcasahotel = new Sorpresa_PorCasaHotel(); 
         mazo.alMazo(porcasahotel);
         mazo.habilitarCartaEspecial(porcasahotel);
-        Sorpresa porjugador = new Sorpresa(TipoSorpresa.PORJUGADOR); 
+        Sorpresa porjugador = new Sorpresa_PorJugador(); 
         mazo.alMazo(porjugador);
         mazo.habilitarCartaEspecial(porjugador);
-        Sorpresa salircarcel = new Sorpresa(TipoSorpresa.SALIRCARCEL, mazo); 
+        Sorpresa salircarcel = new Sorpresa_SalirCarcel(mazo); 
         mazo.alMazo(salircarcel);
         mazo.habilitarCartaEspecial(salircarcel);
     }

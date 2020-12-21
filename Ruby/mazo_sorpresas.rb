@@ -27,22 +27,23 @@ module Civitas
     end
     
     def siguiente
-      sorpresa = Sorpresa.new()
       if (@barajada == false || @usadas == @sorpresas.size)
         if (@debug == false)
           for i in (0..@sorpresas.size)
-            ind = (rand() * sorpresas.size).to_i
+            ind = (rand() * @sorpresas.size).to_i
             sorpresatemp = @sorpresas[i]
-            @sorpresas[i] = sorpresas[ind]
+            @sorpresas[i] = @sorpresas[ind]
             @sorpresas[ind] = sorpresatemp
           end
           @usadas = 0
           @barajada = true
         end
       end
-      @usadas = usadas + 1
+      @usadas = @usadas + 1
+      if (@sorpresas[1] == nil)
+        @sorpresas.delete_at(1)
+      end
       sorpresa = @sorpresas.shift
-      @sorpresas.delete_at(0)
       @sorpresas << sorpresa
       return sorpresa
     end

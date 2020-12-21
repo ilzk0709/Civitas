@@ -29,4 +29,29 @@ module Civitas
     SALIR_CARCEL = :salir_carcel
     PASAR_TURNO = :pasar_turno
   end
+  
+end
+
+module JuegoTexto
+  
+  module Respuestas
+    SI = :si
+    NO = :no
+  end
+  
+  module Gestiones_inmobiliarias
+    VENDER = :vender
+    HIPOTECAR = :hipotecar
+    TERMINAR = :terminar
+    CANCELAR_HIPOTECA = :cancelar_hipoteca
+    CONSTRUIR_CASA = :construir_casa
+    CONSTRUIR_HOTEL = :construir_hotel
+    
+  end
+  
+  module Salidas_carcel
+    PAGANDO = :pagando
+    TIRANDO = :tirando
+  end
+  
 end

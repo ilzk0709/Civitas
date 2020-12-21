@@ -5,7 +5,7 @@
 # and open the template in the editor.
 module Civitas
   class Tablero
-    attr_accesor = :num_casilla_carcel, :por_salida
+    attr_accessor :num_casilla_carcel, :por_salida
     def initialize(num_casilla_carcel)
       if(num_casilla_carcel > 0)
         @num_casilla_carcel = num_casilla_carcel
@@ -13,8 +13,8 @@ module Civitas
         @num_casilla_carcel = 1
       end
       @casillas = Array.new()
-#      casilla = Casilla.new("Salida")
-#      @casillas << casilla
+      casilla = Casilla.new("Salida")
+      @casillas << casilla
       @por_salida = 0
       @tiene_juez = false
     end
@@ -67,7 +67,7 @@ module Civitas
       if (correcto)
         posicion = (actual + tirada) % @casillas.size()
         if (posicion != actual + tirada)
-          @por_salida = por_salida + 1
+          @por_salida = @por_salida + 1
         end
       end
       return posicion

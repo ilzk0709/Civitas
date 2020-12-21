@@ -30,7 +30,7 @@ public class Jugador implements Comparable<Jugador> {
     private float saldo;
     final private float SaldoInicial = 7500;
     private ArrayList<TituloPropiedad> propiedades;
-    private Sorpresa salvoconducto;
+    private Sorpresa_SalirCarcel salvoconducto;                                 //SalirCarcel
 
     /**
      * @brief Constructor de la clase por defecto, con el parametro "nombre"
@@ -405,7 +405,7 @@ public class Jugador implements Comparable<Jugador> {
      * @param s Salvoconducto a otorgar
      * @return true si se le otorga, false si no
      */
-    boolean obtenerSalvoconducto(Sorpresa s) {
+    boolean obtenerSalvoconducto(Sorpresa_SalirCarcel s) {                      //SalirCarcel
         boolean b = true;
 
         if (isEncarcelado()) {
