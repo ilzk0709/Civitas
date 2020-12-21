@@ -53,7 +53,7 @@ module Civitas
       encarcelar = false
       
       if(!@encarcelado)
-        if(!tieneSalvoconducto())
+        if(tieneSalvoconducto())
           perderSalvoconducto()
           encarcelar = false
           Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + "se libra de carcel")
@@ -77,9 +77,9 @@ module Civitas
     
     def encarcelar(numCasillaCarcel)
       if(debeSerEncarcelado())
-        moverAcasilla(numCasillaCarcel)
+        moverACasilla(numCasillaCarcel)
         @encarcelado = true
-        Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + "va a la carcel")
+        Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " va a la carcel")
       end
       
       return @encarcelado
@@ -156,12 +156,12 @@ module Civitas
     end
     
     def pasaPorSalida()
-      modificarSaldo(PASO_POR_SALIDA)
+      modificarSaldo(@@PASO_POR_SALIDA)
       Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " ha pasado por salida")
       return true
     end
     
-    def perderSalvoConducto
+    def perderSalvoconducto
       @salvoconducto.usada()
       @salvoconducto = nil
     end
@@ -176,20 +176,29 @@ module Civitas
       return @puedeComprar
     end
     
-    def puedeSalirCarcelPagando()
+    def salirCarcelPagando()
       b = false
       
-      if(@saldo >= PRECIO_POR_LIBERTAD)
+      if(@saldo >= @@PRECIO_POR_LIBERTAD)
+        b = true
+        @saldo = @saldo - @@PRECIO_POR_LIBERTAD
+      end
+      
+      return b
+    end
+     def salirCarcelTirando
+      b = false
+      tirada = Dado.instance.tirar
+      if(tirada > 5)
         b = true
       end
       
       return b
     end
-    
     def puedeEdificarCasa(propiedad)
       b = false
       
-      if(propiedad.numCasas < CASAS_MAX)
+      if(propiedad.numCasas < @@CASAS_MAX)
         if(@saldo >= propiedad.precioEdificar)
           b = true
         end
@@ -201,8 +210,8 @@ module Civitas
     def puedeEdificarHotel(propiedad)
       b = false
       
-      if(propiedad.numHoteles < HOTELES_MAX)
-        if(propiedad.numCasas == CASAS_POR_HOTEL)
+      if(propiedad.numHoteles < @@HOTELES_MAX)
+        if(propiedad.numCasas == @@CASAS_POR_HOTEL)
           if(@saldo >= propiedad.precioEdificar)
             b = true
           end
@@ -268,9 +277,9 @@ module Civitas
         b = false
       else
         if(existeLaPropiedad(ip))
-          if(@propiedades[ip].vender(this))
+          if(@propiedades[ip].vender(self))
+            Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " vende " + @propiedades[ip].nombre)
             @propiedades.delete_at(ip)
-            Diario.instance.ocurre_evento("Jugador " + @nombre.to_s + " vende " + @propiedades[ip].nombre.to_s)
             b = true
           end
         end
@@ -293,7 +302,7 @@ module Civitas
         puedoGastar = puedoGastar(cantidad)
         
         if(puedoGastar)
-          result = propiedad.cancelarHipoteca(this)
+          result = propiedad.cancelarHipoteca(self)
         end
         
         if(result)
@@ -315,12 +324,12 @@ module Civitas
         precio = propiedad.precioCompra
         
         if(puedoGastar(precio))
-          result = propiedad.comprar(this)
+          result = propiedad.comprar(self)
         end
         
         if(result)
           @propiedades.push(propiedad)
-          Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " compra propiedad " + propiedad.toString())
+          Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " compra propiedad " + propiedad.to_s())
         end
       end
       
@@ -337,12 +346,12 @@ module Civitas
       if(existeLaPropiedad(ip))
         propiedad = TituloPropiedad.new
         propiedad = @propiedades[ip]
-        puedoEdificarHotel = puedoEdificarHotel(propiedad)
+        puedoEdificarHotel = puedeEdificarHotel(propiedad)
         precio = propiedad.precioEdificar
         
         if(puedoEdificarHotel)
-          result = propiedad.construirHotel(this)
-          propiedad.derruirCasas(CASAS_POR_HOTEL, this)
+          result = propiedad.construirHotel(self)
+          propiedad.derruirCasas(@@CASAS_POR_HOTEL, self)
           Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " construye hotel en " + @propiedades[ip].nombre.to_s)
         end
       end
@@ -358,9 +367,9 @@ module Civitas
       end
       
       if(existeLaPropiedad(ip))
-        propiedad = TituloPropiedad.new
+        propiedad = TituloPropiedad.new()
         propiedad = @propiedades[ip]
-        result = propiedad.hipotecar(this)
+        result = propiedad.hipotecar(self)
       end
       
       if(result)
@@ -382,11 +391,10 @@ module Civitas
       if(existe)
         propiedad = TituloPropiedad.new
         propiedad = @propiedades[ip]
-        puedoEdificar = puedoEdificar(propiedad)
+        puedoEdificar = puedeEdificarCasa(propiedad)
         precio = propiedad.precioEdificar
-        
-        if(puedoEdficiar)
-          result = propiedad.construirCasa(this)
+        if(puedoEdificar)
+          result = propiedad.construirCasa(self)
           Diario.instance.ocurre_evento("El jugador " + @nombre.to_s + " construye casa en " + @propiedades[ip].nombre.to_s)
         end
       end
@@ -395,10 +403,7 @@ module Civitas
     end
     
     def to_s
-      return "Jugador: " + @nombre + "\n"
-      + "Encarcelado?: " + @encarcelado + "\n"
-      + "Saldo: " + @saldo + "\n"
-      + "Casilla Actual: " + @numCasillaActual
+      return "Jugador: " + @nombre + "\n" + "Encarcelado?: " + @encarcelado.to_s + "\n" + "Saldo: " + @saldo.to_s + "\n" + "Casilla Actual: " + @numCasillaActual.to_s
     end
   end
 end

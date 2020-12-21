@@ -1,15 +1,15 @@
 # To change this license header, choose License Headers in Project Properties.
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
-@@CARCEL = 10
+@@CARCEL = 3
 @@NUM_PROPIEDADES = 12
 @@NUM_SORPRESAS = 3
 @@CASILLAS_TABLERO = 20
-@@PRECIO_ALQUILER = 10
-@@FACTOR_REVALORACION = 10
-@@PRECIO_HIPOTECA = 10
-@@PRECIO_COMPRA = 7270
-@@PRECIO_EDIFICACION = 20
+#@@PRECIO_ALQUILER = 10
+#@@FACTOR_REVALORACION = 10
+#@@PRECIO_HIPOTECA = 10
+#@@PRECIO_COMPRA = 7270
+#@@PRECIO_EDIFICACION = 20
 @@IMPUESTO = 20
 
 require_relative 'casilla'
@@ -19,6 +19,13 @@ require_relative 'mazo_sorpresas'
 require_relative 'dado'
 require_relative 'tablero'
 require_relative 'sorpresa'
+require_relative 'sorpresa_ir_carcel'
+require_relative 'sorpresa_ir_casilla'
+require_relative 'sorpresa_salir_carcel'
+require_relative 'sorpresa_pagar_cobrar'
+require_relative 'sorpresa_por_jugador'
+require_relative 'sorpresa_por_casa_hotel'
+require_relative 'titulo_propiedad'#nosesihacefalta
 
 module Civitas
   srand()
@@ -27,23 +34,23 @@ module Civitas
     attr_reader :jugador_actual , :casilla_actual
     
     def inicializar_mazo_sorpresas(_tablero)
-      s = Sorpresa.new_salir_carcel(@mazo)
+      s = Sorpresa_salir_carcel.new(@mazo)
       @mazo.al_mazo(s)
       @mazo.habilitar_carta_especial(s)
-      s = Sorpresa.new_sorpresa_pagcob(Tipo_sorpresa::PAGARCOBRAR)
+      s = Sorpresa_pagar_cobrar.new()
       @mazo.al_mazo(s)
       @mazo.habilitar_carta_especial(s)
-      s = Sorpresa.new_sorpresa_pagcob(Tipo_sorpresa::PORJUGADOR)
+      s = Sorpresa_por_jugador.new()
       @mazo.al_mazo(s)
       @mazo.habilitar_carta_especial(s)
-      s = Sorpresa.new_sorpresa_pagcob(Tipo_sorpresa::PORCASAHOTEL)
+      s = Sorpresa_por_casa_hotel.new()
       @mazo.al_mazo(s)
       @mazo.habilitar_carta_especial(s)
-      s = Sorpresa.new_sorpresa_ir_carcel(@tablero)
+      s = Sorpresa_ir_carcel.new(@tablero)
       @mazo.al_mazo(s)
       @mazo.habilitar_carta_especial(s)
       numcas = rand(@@CASILLAS_TABLERO)+1.to_i
-      s = Sorpresa.new_sorpresa_ir_casilla(@tablero, numcas)
+      s = Sorpresa_ir_casilla.new(@tablero, numcas)
       @mazo.al_mazo(s)
       @mazo.habilitar_carta_especial(s)
     end
@@ -53,10 +60,10 @@ module Civitas
       @tablero = Tablero.new(@@CARCEL)
       @tablero.aniade_casilla(Casilla.new_casilla_descanso("PARKING"))
       @tablero.aniade_casilla(Casilla.new_casilla_impuesto("IMPUESTO", @@IMPUESTO))
-      for i in 1..@@NUM_PROPIEDADES
+      for i in 0..0#@@NUM_PROPIEDADES
         @tablero.aniade_casilla(Casilla.new_casilla_calle(TituloPropiedad.new("CALLE " + i.to_s, @@PRECIO_ALQUILER, @@FACTOR_REVALORACION, @@PRECIO_HIPOTECA, @@PRECIO_COMPRA, @@PRECIO_EDIFICACION)))
       end
-      for n in 1..@@NUM_SORPRESAS
+      for n in 1..@@NUM_SORPRESAS+@@NUM_PROPIEDADES
         @tablero.aniade_casilla(Casilla.new_casilla_sorpresa(@mazo, "SORPRESA"))
       end
       @tablero.aniade_juez
@@ -116,9 +123,13 @@ module Civitas
     private :contabilizar_pasos_por_salida
     
     def final_del_juego
+      fin = false
       for i in 1..@jugadores.size-1
-        @jugadores[i].saldo == 0
+        if (@jugadores[i].saldo == 0)
+          fin = true
+        end
       end
+      return fin
     end
     
     def get_casilla_actual
@@ -185,6 +196,7 @@ module Civitas
         siguiente_paso_completado(operacion)
         end
       end
+      operacion
     end
     def siguiente_paso_completado(operacion)
       @estado = @gestor.siguiente_estado(@jugadores[@indice_jugador_actual], @estado, operacion)

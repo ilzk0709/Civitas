@@ -6,10 +6,10 @@
 require_relative 'estados_juego'
 module Civitas
   
-  attr_reader :nombre, :titulo_propiedad  
+  #attr_accessor :nombre, :titulo_propiedad
   
   class Casilla
-    
+    attr_accessor :nombre, :titulo_propiedad
     @@carcel = 10
     private
     def initialize( _tipo, _nombre = "", _importe = 0, _mazo = nil, _sorpresa = nil, _titulo_propiedad = nil)
@@ -34,7 +34,7 @@ module Civitas
       new(Tipo_casilla::JUEZ, _nombre)
     end
     
-    def self.new_casilla_impuesto(cantidad, _nombre)
+    def self.new_casilla_impuesto(_nombre, cantidad)
       new(Tipo_casilla::IMPUESTO, _nombre, cantidad)
     end
     
@@ -43,8 +43,8 @@ module Civitas
     end
     
     def informe(actual, todos)
-      Diario.instance.ocurre_evento("El jugador " + todos[actual].to_s + 
-          " ha caido en la casilla" + todos[actual].numCasillaActual.to_s + "\n" + to_s)
+      Diario.instance.ocurre_evento("El jugador" + todos[actual].to_s + 
+          " ha caido en la casilla " + todos[actual].numCasillaActual.to_s + "\n" + to_s)
     end
     
     def jugador_correcto(actual, todos)
