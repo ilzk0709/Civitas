@@ -1,7 +1,14 @@
 package civitas;
 
+enum EstadosJuego {
+  INICIO_TURNO,
+  DESPUES_CARCEL,
+  DESPUES_AVANZAR,
+  DESPUES_COMPRAR,
+  DESPUES_GESTIONAR
+}
 
-enum TipoCasilla{
+enum TipoCasilla {
     CALLE,
     SORPRESA,
     JUEZ,
@@ -9,19 +16,11 @@ enum TipoCasilla{
     DESCANSO
 }
 
-enum TipoSorpresa{
+enum TipoSorpresa {
     IRCARCEL,
     IRCASILLA,
     PAGARCOBRAR,
     PORCASAHOTEL,
     PORJUGADOR,
     SALIRCARCEL
-}
-
-enum EstadosJuego {
-  INICIO_TURNO,
-  DESPUES_CARCEL,
-  DESPUES_AVANZAR,
-  DESPUES_COMPRAR,
-  DESPUES_GESTIONAR
 }

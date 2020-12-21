@@ -1,98 +1,109 @@
-///*
-// * To change this license header, choose License Headers in Project Properties.
-// * To change this template file, choose Tools | Templates
-// * and open the template in the editor.
-// */
-//package civitas;
-//
-///**
-// *
-// * @author roberro
-// */
-//public class TestP1 {
-//    
-//    public void quienProb(int iter, double[] probabilidades) {
-//        
-//    }
-//    
-//    public static void main (String args[]) {
-//        
-//        boolean funciona = true;
-//        int resultado = 0, suma = 0, carcel = 7, casillas = 20, posicion = 0;
-//        int iter = 100;
-//        double probabilidades[] = {0,0,0,0};
-//        Sorpresa s = new Sorpresa(TipoSorpresa.IRCARCEL), s1 = new Sorpresa(TipoSorpresa.IRCASILLA);
-//        MazoSorpresas mazo = new MazoSorpresas();
-//        Tablero tablero = new Tablero(carcel);
-//        
-//        
-//        for (int i = 0; i < iter; i++) {
-//            resultado = Dado.getInstance().quienEmpieza(probabilidades.length);
-//            //Los valores van del 0 al 3 porque son los índices del vector
-//            //de probabilidades
-//            probabilidades[resultado]++;
-//        }
-//        
-//        System.out.println("Veces: " + probabilidades.toString());
-//        
-//        for (int i = 0; i < probabilidades.length; i++) {
-//            probabilidades[i] = probabilidades[i]/iter;
-//        }
-//        
-//        System.out.println("Probabilidades: " + probabilidades.toString());
-//        
-//        Dado.getInstance().setDebug(true);
-//        for (int i = 0; i < iter; i++) {
-//            resultado = Dado.getInstance().tirar();
-//            //El modo debug implica que siempre sale 1, si sale otro numero, falla
-//            if (resultado != 1)
-//                funciona = false;
-//        }
-//        //Para comprobar si funciona desactivar el debug, ponemos resultado a 0
-//        Dado.getInstance().setDebug(false);
-//        resultado = 0;
-//        for (int i = 0; i < iter; i++) {
-//            //Vamos a sumar todos los resultados de las tiradas, si son distintos
-//            //de 1 la suma deberia ser mayor que el numero de pruebas. Aunque 
-//            // este metodo fallaria el caso en el que salga todo 1 por casualidad
-//            resultado = Dado.getInstance().tirar();
-//            suma += resultado;
-//        }
-//        if (suma == iter)
-//                funciona = false;
-//        
-//    //*******************Funciona************************
-//    
-//        if (Dado.getInstance().salgoDeLaCarcel())
-//            System.out.println("Sales de la cárcel");
-//        else if (!Dado.getInstance().salgoDeLaCarcel())
-//            System.out.println("No sales de la cárcel");
-//        else
-//            System.err.println("Dado.salgoDeLaCarcel no funciona");
-//        
-//        System.out.println("El último resltado ha sido " +
-//                Dado.getInstance().getUltimoResultado());
-//        
-//        mazo.alMazo(s);
-//        mazo.alMazo(s1);
-//        mazo.siguiente();
-//        mazo.inhabilitarCartaEspecial(s1);
-//        mazo.habilitarCartaEspecial(s1);
-//        while (Diario.getInstance().eventosPendientes())
-//            System.out.println(Diario.getInstance().leerEvento());
-//        
-//        for (int i = 0; i < casillas; i++) {
-//            tablero.aniadeCasilla(new Casilla(""));
-//        }
-//        
-//        tablero.vaciar();
-//        
-//        for (int i = 0; i < carcel - 2; i++) {
-//            tablero.aniadeCasilla(new Casilla(""));
-//        }
-//        
-//        posicion = tablero.nuevaPosicion(posicion, Dado.getInstance().tirar());
-//        if (posicion == -1)
-//            System.err.println("Tablero incorrecto");
-//    }
-//}
+package civitas;
+
+public class TestP1 {
+
+    public static void main(String[] args) {
+
+        int n, cont1 = 0, cont2 = 0, cont3 = 0, cont4 = 0;
+
+        //PRUEBA 1:
+        for (int i = 0; i < 100; i++) {
+            
+            n = Dado.getInstance().quienEmpieza(4);
+
+            switch (n) {
+                case 0:
+                    cont1++;
+                    break;
+                case 1:
+                    cont2++;
+                    break;
+                case 2:
+                    cont3++;
+                    break;
+                default:
+                    cont4++;
+                    break;
+            }
+        }
+
+        System.out.println("Jug1: " + cont1);
+        System.out.println("Jug2: " + cont2);
+        System.out.println("Jug3: " + cont3);
+        System.out.println("Jug4: " + cont4);
+        
+        System.out.println("\n---------\n");
+        
+        //PRUEBA 2:
+        Dado.getInstance().setDebug(true);
+        
+        int x;
+        
+        for(int i = 0; i < 10; i++){
+            x = Dado.getInstance().tirar();
+            System.out.println(x);
+        }
+        
+        System.out.println("\n---------\n");
+        Dado.getInstance().setDebug(false);
+        
+        for(int i = 0; i < 10; i++){
+            x = Dado.getInstance().tirar();
+            System.out.println(x);
+        }
+        
+        System.out.println("\n---------\n");
+        
+        //PRUEBA 3:
+        int a;
+        boolean b;
+        
+        a = Dado.getInstance().getUltimoResultado();
+        b = Dado.getInstance().salgoDeLaCarcel();
+        
+        System.out.println("Tirada: " + a);
+        System.out.println("Salir Carcel: " + b);
+        
+        System.out.println("\n---------\n");
+        
+        //PRUEBA 4:
+         System.out.println(TipoCasilla.CALLE);
+         System.out.println(EstadosJuego.DESPUES_COMPRAR);
+         System.out.println(TipoSorpresa.PORCASAHOTEL);
+         System.out.println(OperacionesJuego.GESTIONAR);
+         
+         System.out.println("\n---------\n");
+         
+         //PRUEBA 5:
+         MazoSorpresas mazo = new MazoSorpresas();
+         Sorpresa s = new Sorpresa(), h = new Sorpresa();
+         
+         mazo.alMazo(s);
+         mazo.alMazo(h);
+         mazo.siguiente();
+         mazo.inhabilitarCartaEspecial(h);
+         mazo.habilitarCartaEspecial(h);
+         System.out.println(Diario.getInstance().leerEvento());
+         
+         //PRUEBA 6:
+         System.out.println("\n---------\n");
+         
+         Tablero tablero = new Tablero(0);
+         Casilla c = new Casilla("1"), c2 = new Casilla("2"), c3 = new Casilla("3");
+         
+         tablero.añadeCasilla(c);
+         tablero.añadeCasilla(c2);
+         tablero.añadeCasilla(c3);
+         tablero.añadeJuez();
+         
+         System.out.println("TABLERO: " + tablero.getCasilla(5).getNombre());
+         
+         int tirada = Dado.getInstance().tirar();
+         int posicion_actual = tablero.nuevaPosicion(0, tirada);
+      
+         System.out.println("Tirada: " + tirada);
+         System.out.println("Calculo de tirada: " + tablero.calcularTirada(0, posicion_actual));
+
+    }
+
+}

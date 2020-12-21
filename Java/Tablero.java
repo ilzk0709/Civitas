@@ -1,87 +1,115 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package civitas;
+
 import java.util.ArrayList;
-/**
- *
- * @author roberro
- */
+
 public class Tablero {
+
     private int numCasillaCarcel;
     private ArrayList<Casilla> casillas;
     private int porSalida;
     private boolean tieneJuez;
-    
-    public Tablero(int carcel) {
-        numCasillaCarcel = carcel;
-        casillas = new ArrayList<Casilla>();
-        // Se puede aniadir directamente haciendo la declaracion en el argumento?
-        casillas.add(new Casilla("Salida"));
+
+    public Tablero(int n) {
+        if (n >= 1) {
+            numCasillaCarcel = n;
+        } else {
+            numCasillaCarcel = 1;
+        }
+
+        casillas = new ArrayList<>();
+        Casilla obj = new Casilla("Salida");
+        casillas.add(obj);
+
         porSalida = 0;
         tieneJuez = false;
     }
-    
+
     private boolean correcto() {
-        return (casillas.size() > numCasillaCarcel);
+        boolean correct = false;
+
+        if (casillas.size() > numCasillaCarcel && tieneJuez) {
+            correct = true;
+        }
+
+        return correct;
     }
-    
-    private boolean correcto (int numCasilla) {
-        boolean indiceValido = 0 <= numCasilla && numCasilla < casillas.size();
-        return (this.correcto() && indiceValido);
+
+    private boolean correcto(int numCasilla) {
+        boolean correct = false;
+
+        if (correcto() && casillas.size() > numCasilla) {
+            correct = true;
+        }
+
+        return correct;
     }
-    
-    public int getCarcel() {
+
+    int getCarcel() {
         return numCasillaCarcel;
     }
-    
-    public int getPorSalida() {
-        int numero = porSalida;
-        if (porSalida > 0)
-            porSalida--;
-        return numero;
+
+    int getPorSalida() {
+        int valorPorSalida = porSalida;
+
+        if (porSalida > 0) {
+            porSalida -= 1;
+        }
+
+        return valorPorSalida;
     }
-    
-    public void aniadeCasilla(Casilla casilla) {
-        if (casillas.size() == numCasillaCarcel)
-            casillas.add(new Casilla("Carcel"));
+
+    void añadeCasilla(Casilla casilla) {
+        boolean añadir_cárcel = false;
+        if (casillas.size() == numCasillaCarcel) {
+            Casilla c = new Casilla("Cárcel");
+            casillas.add(c);
+            añadir_cárcel = true;
+        }
+
         casillas.add(casilla);
-        if (casillas.size() == numCasillaCarcel)
-            casillas.add(new Casilla("Carcel"));
+
+        if (!añadir_cárcel && casillas.size() == numCasillaCarcel) {
+            Casilla c = new Casilla("Cárcel");
+            casillas.add(c);
+        }
     }
-    
-    public void aniadeJuez() {
+
+    void añadeJuez() {
         if (!tieneJuez) {
-            casillas.add(new Casilla("JUEZ"));
+            añadeCasilla(new CasillaJuez(numCasillaCarcel, "Juez"));
             tieneJuez = true;
         }
     }
-    
-    public Casilla getCasilla(int numCasilla) {
-        Casilla temporal = new Casilla();
-        if (correcto(numCasilla))
-            temporal = casillas.get(numCasilla);
-        //Falta ver que es que devuelva null en caso de no ser numC valido
-        return temporal;
-    }
-    
-    public int nuevaPosicion(int actual, int tirada) {
-        int posicion = -1;
-        if (correcto()) {
-            posicion = (actual + tirada) % casillas.size();
-            if (posicion != actual + tirada)
-                porSalida++;
+
+    Casilla getCasilla(int numCasilla) {
+        if (correcto(numCasilla)) {
+            return casillas.get(numCasilla);
+        } else {
+            return null;
         }
+    }
+
+    int nuevaPosicion(int actual, int tirada) {
+        int posicion = -1;
+
+        if (correcto()) {
+            posicion = (actual + tirada) % 20;
+        }
+
+        if (posicion != actual + tirada) {
+            porSalida++;
+        }
+
         return posicion;
     }
-    
-    public int calcularTirada (int origen, int destino) {
+
+    int calcularTirada(int origen, int destino) {
         int tirada = destino - origen;
-        if (tirada < 0)
-            tirada = tirada + casillas.size();
+
+        if (tirada < 0) {
+            tirada += 20;
+        }
+
         return tirada;
     }
 }

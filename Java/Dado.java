@@ -1,62 +1,55 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package civitas;
 
-import java.util.ArrayList;
 import java.util.Random;
-/**
- *
- * @author roberro
- */
+
 public class Dado {
-    static final private Dado instance = new Dado();
-    static final private int SalidaCarcel = 5;
+
     private Random random;
     private int ultimoResultado;
     private boolean debug;
-    private Dado(){
-        random = new Random();
-        ultimoResultado = 0;
-        debug = false;
-    }
+    static final private Dado instance = new Dado();
+    final private int SalidaCarcel = 5;
     
+    private Dado() {
+        ultimoResultado = -1;
+        debug = false;
+        random = new Random();
+    }
+
     static public Dado getInstance() {
         return instance;
     }
-    
-    public int tirar() {
-        int tirada = 1;
-        if (!debug)
-            tirada = random.nextInt(6) + 1;
-        ultimoResultado = tirada;
-        return tirada;
+
+    int tirar() {
+        if (!debug) {
+            ultimoResultado = random.nextInt(6) + 1;
+            return ultimoResultado;
+        } 
+        else
+            return 1;
     }
     
-    public boolean salgoDeLaCarcel() {
-        boolean sale = false;
-        int tirada = tirar();
-        if (tirada >= 5)
-            sale = true;
-        return sale;
+    boolean salgoDeLaCarcel(){
+        boolean salir = false;
+        
+        if(tirar() >= SalidaCarcel)
+            salir = true;
+        return salir;    
     }
     
-    public int quienEmpieza(int n) {
-        int numjugador = random.nextInt(n);
-        return numjugador;
+    int quienEmpieza(int n) {
+        int jug = random.nextInt(n);
+        
+        return jug;
     }
     
     public void setDebug(boolean d) {
         debug = d;
-        if (d == true)
-            Diario.getInstance().ocurreEvento("Se ha activado el modo debug");
-        else if (d == false)
-            Diario.getInstance().ocurreEvento("Se ha desactivado el modo debug");
+        Diario.getInstance().ocurreEvento("Debug mode: " + debug);
     }
     
-    public int getUltimoResultado() {
+    int getUltimoResultado() {
         return ultimoResultado;
     }
+
 }
