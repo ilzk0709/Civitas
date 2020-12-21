@@ -58,13 +58,13 @@ module Civitas
     
     def inicializar_tablero(_mazo)
       @tablero = Tablero.new(@@CARCEL)
-      @tablero.aniade_casilla(Casilla.new_casilla_descanso("PARKING"))
-      @tablero.aniade_casilla(Casilla.new_casilla_impuesto("IMPUESTO", @@IMPUESTO))
-      for i in 0..0#@@NUM_PROPIEDADES
-        @tablero.aniade_casilla(Casilla.new_casilla_calle(TituloPropiedad.new("CALLE " + i.to_s, @@PRECIO_ALQUILER, @@FACTOR_REVALORACION, @@PRECIO_HIPOTECA, @@PRECIO_COMPRA, @@PRECIO_EDIFICACION)))
+      @tablero.aniade_casilla(Casilla.new("PARKING"))
+      @tablero.aniade_casilla(CasillaImpuesto.new(@@IMPUESTO, "IMPUESTO"))
+      for i in 1..@@NUM_PROPIEDADES
+        @tablero.aniade_casilla(CasillaCalle.new(TituloPropiedad.new("CALLE " + i.to_s, @@PRECIO_ALQUILER, @@FACTOR_REVALORACION, @@PRECIO_HIPOTECA, @@PRECIO_COMPRA, @@PRECIO_EDIFICACION)))
       end
-      for n in 1..@@NUM_SORPRESAS+@@NUM_PROPIEDADES
-        @tablero.aniade_casilla(Casilla.new_casilla_sorpresa(@mazo, "SORPRESA"))
+      for n in 1..@@NUM_SORPRESAS
+        @tablero.aniade_casilla(CasillaSorpresa.new(@mazo, "SORPRESA"))
       end
       @tablero.aniade_juez
       inicializar_mazo_sorpresas(@tablero)
